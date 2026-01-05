@@ -1,4 +1,5 @@
 import Header from "../../components/Header/Header";
+import Footer from "../../components/Footer/Footer";
 import InfoSection from "./components/InfoSection/InfoSection";
 import MainSection from "./components/MainSection/MainSection";
 import PopularProduct from "./components/PopularProduct/PopularProduct";
@@ -14,6 +15,7 @@ export default function HomePage() {
       <InfoSection />
       <VideoBlock />
       <ContactSection />
+      <Footer />
     </div>
   );
 }
