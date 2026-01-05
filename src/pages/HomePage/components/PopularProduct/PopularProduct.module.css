@@ -1,0 +1,46 @@
+.title {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 45px;
+  text-align: center;
+  color: var(--color-text-dark);
+}
+.card_container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  margin-top: 50px;
+}
+
+/* Планшеты */
+@media (max-width: 1024px) {
+  .title {
+    font-size: 38px;
+  }
+  .card_container {
+    gap: 20px;
+  }
+}
+
+/* Мобильные устройства */
+@media (max-width: 768px) {
+  .title {
+    font-size: 32px;
+  }
+  .card_container {
+    margin-top: 30px;
+    gap: 15px;
+  }
+}
+
+/* Маленькие телефоны */
+@media (max-width: 480px) {
+  .title {
+    font-size: 26px;
+    padding: 0 20px;
+  }
+  .card_container {
+    margin-top: 20px;
+  }
+}
