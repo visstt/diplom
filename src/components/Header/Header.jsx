@@ -49,18 +49,18 @@ export default function Header() {
           className={`${styles.navbar} ${isMenuOpen ? styles.navbarOpen : ""}`}
         >
           <div className={styles.nav_section}>
-            <a href="/" onClick={() => setIsMenuOpen(false)}>
+            <Link to="/catalog" onClick={() => setIsMenuOpen(false)}>
               Каталог
-            </a>
-            <a href="/" onClick={() => setIsMenuOpen(false)}>
+            </Link>
+            <Link to="/" onClick={() => setIsMenuOpen(false)}>
               Услуги
-            </a>
-            <a href="/" onClick={() => setIsMenuOpen(false)}>
+            </Link>
+            <Link to="/" onClick={() => setIsMenuOpen(false)}>
               О нас
-            </a>
-            <a href="/" onClick={() => setIsMenuOpen(false)}>
+            </Link>
+            <Link to="/" onClick={() => setIsMenuOpen(false)}>
               Контакты
-            </a>
+            </Link>
           </div>
 
           <div className={styles.icons_section}>
