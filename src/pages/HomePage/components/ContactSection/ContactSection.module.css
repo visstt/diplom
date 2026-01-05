@@ -73,8 +73,7 @@
   border-radius: 20px;
 }
 
-.map :global(.leaflet-control-attribution),
-.map :global(.leaflet-control) {
+.map :global(.leaflet-control-attribution) {
   display: none;
 }
 

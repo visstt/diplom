@@ -1,23 +1,6 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import L from "leaflet";
 import styles from "./ContactSection.module.css";
-
-// Создаем кастомный маркер в виде синей капли
-const customIcon = L.divIcon({
-  className: "custom-marker",
-  html: `
-    <div style="position: relative; width: 60px; height: 60px;">
-      <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M30 5C20 5 12 13 12 23C12 33 30 55 30 55C30 55 48 33 48 23C48 13 40 5 30 5Z" 
-              fill="#1E88E5" stroke="white" stroke-width="3"/>
-      </svg>
-    </div>
-  `,
-  iconSize: [60, 60],
-  iconAnchor: [30, 55],
-  popupAnchor: [0, -55],
-});
 
 export default function ContactSection() {
   const position = [51.7667, 55.0986]; // Координаты Оренбурга, ул. Берёзка, 2/5
@@ -42,14 +25,14 @@ export default function ContactSection() {
             <MapContainer
               center={position}
               zoom={15}
-              scrollWheelZoom={false}
+              scrollWheelZoom={true}
               className={styles.map}
             >
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
               />
-              <Marker position={position} icon={customIcon}>
+              <Marker position={position}>
                 <Popup>
                   ООО «ТИТАН»
                   <br />
