@@ -30,10 +30,10 @@ export default function Header() {
         ></div>
       )}
       <div className={styles.header}>
-        <div className={styles.logo_section}>
+        <Link to="/" className={styles.logo_section}>
           <img src="/img/logo.svg" alt="logo" />
           <h1>Титан</h1>
-        </div>
+        </Link>
 
         <button
           className={styles.burgerButton}

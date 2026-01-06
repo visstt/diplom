@@ -8,6 +8,9 @@
   display: flex;
   align-items: center;
   gap: 5px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
 
   h1 {
     font-family: var(--font-heading);
@@ -15,6 +18,10 @@
     font-size: 24px;
     color: var(--color-white);
   }
+}
+
+.logo_section:hover {
+  opacity: 0.8;
 }
 .navbar {
   display: flex;
