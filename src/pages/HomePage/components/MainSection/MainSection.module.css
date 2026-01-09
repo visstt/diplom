@@ -28,6 +28,7 @@
   font-size: 24px;
   color: var(--color-white);
   margin-top: 20px;
+  margin-bottom: 100px;
 }
 .button {
   cursor: pointer;
@@ -95,7 +96,6 @@
 @media (max-width: 480px) {
   .mainSection {
     padding-top: 60px;
-    
   }
   .title {
     font-size: 24px;

@@ -55,10 +55,10 @@ export default function Header() {
             <Link to="/services" onClick={() => setIsMenuOpen(false)}>
               Услуги
             </Link>
-            <Link to="/" onClick={() => setIsMenuOpen(false)}>
+            <Link to="/about" onClick={() => setIsMenuOpen(false)}>
               О нас
             </Link>
-            <Link to="/" onClick={() => setIsMenuOpen(false)}>
+            <Link to="/contacts" onClick={() => setIsMenuOpen(false)}>
               Контакты
             </Link>
           </div>
