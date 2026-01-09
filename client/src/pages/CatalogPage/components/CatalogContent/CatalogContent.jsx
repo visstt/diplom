@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { IoSearch } from "react-icons/io5";
 import ProductCard from "../ProductCard/ProductCard";
+import ProductModal from "../../../../components/ProductModal/ProductModal";
 import styles from "./CatalogContent.module.css";
 
 // Моковые данные
@@ -69,6 +70,18 @@ export default function CatalogContent() {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleProductClick = (product) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+  };
 
   const handleCategoryChange = (category) => {
     setSelectedCategories((prev) =>
@@ -190,13 +203,23 @@ export default function CatalogContent() {
             ) : (
               <div className={styles.productsGrid}>
                 {filteredProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    onClick={() => handleProductClick(product)}
+                  />
                 ))}
               </div>
             )}
           </div>
         </div>
       </div>
+
+      <ProductModal
+        product={selectedProduct}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+      />
     </div>
   );
 }

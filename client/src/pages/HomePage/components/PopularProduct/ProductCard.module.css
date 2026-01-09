@@ -3,6 +3,8 @@
   display: flex;
   flex-direction: column;
   align-items: start;
+  cursor: pointer;
+  transition: transform 0.2s;
   img {
     width: 361px;
     height: 361px;
@@ -21,6 +23,10 @@
     font-size: 20px;
     color: var(--color-text-dark);
   }
+}
+
+.card:hover {
+  transform: translateY(-4px);
 }
 
 /* Планшеты */

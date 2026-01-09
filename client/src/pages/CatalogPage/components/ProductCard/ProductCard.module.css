@@ -3,12 +3,19 @@
   display: flex;
   flex-direction: column;
   align-items: start;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
 }
 
 .card img {
   width: 200px;
   height: 200px;
   object-fit: contain;
+  pointer-events: none;
 }
 
 .card p {
