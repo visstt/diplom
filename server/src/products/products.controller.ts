@@ -33,7 +33,9 @@ export class ProductsController {
   @ApiBody({ type: CreateProductDto })
   @ApiResponse({
     status: HttpStatus.CREATED,
-    description: "Товар успешно создан",    type: Product,  })
+    description: "Товар успешно создан",
+    type: Product,
+  })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
     description: "Неверные данные",
@@ -52,7 +54,9 @@ export class ProductsController {
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: "Список товаров успешно получен",    type: [Product],  })
+    description: "Список товаров успешно получен",
+    type: [Product],
+  })
   findAll(@Query("category") category?: string) {
     return this.productsService.findAll(category);
   }
@@ -110,7 +114,9 @@ export class ProductsController {
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: "Товар успешно удален",    type: Product,  })
+    description: "Товар успешно удален",
+    type: Product,
+  })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
     description: "Товар не найден",
