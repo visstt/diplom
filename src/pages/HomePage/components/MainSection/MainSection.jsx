@@ -1,4 +1,5 @@
 import Header from "../../../../components/Header/Header";
+import Button from "../../../../components/Button/Button";
 import styles from "./MainSection.module.css";
 
 export default function MainSection() {
@@ -15,7 +16,7 @@ export default function MainSection() {
             Мы делаем бизнес клиента сильнее и создаем возможности для успешного
             развития с помощью IT-технологий
           </p>
-          <button className={styles.button}>Перейти к покупкам</button>
+          <Button>Перейти к покупкам</Button>
         </div>
       </div>
     </>

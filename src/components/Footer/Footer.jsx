@@ -1,3 +1,4 @@
+import Button from "../Button/Button";
 import styles from "./Footer.module.css";
 
 export default function Footer() {
@@ -29,9 +30,7 @@ export default function Footer() {
               <br />и мы постараемся ответить как можно скорее.
             </p>
             <form className={styles.form}>
-              <button type="submit" className={styles.button}>
-                Написать
-              </button>
+              <Button type="submit">Написать</Button>
             </form>
           </div>
           <div className={styles.divider}></div>
