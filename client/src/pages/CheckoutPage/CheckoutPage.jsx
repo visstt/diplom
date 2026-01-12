@@ -95,7 +95,7 @@ export default function CheckoutPage() {
     try {
       // Очищаем корзину
       await clearCart();
-      
+
       // Сохраняем данные заказа и показываем модалку
       setOrderData({
         orderId: orderId,
