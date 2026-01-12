@@ -38,6 +38,11 @@
 
 /* Планшеты */
 @media (max-width: 1024px) {
+  .card img {
+    width: 180px;
+    height: 180px;
+  }
+
   .card p {
     font-size: 13px;
     padding-left: 16px;
@@ -55,6 +60,11 @@
     margin-bottom: 20px;
   }
 
+  .card img {
+    width: 160px;
+    height: 160px;
+  }
+
   .card p {
     padding-left: 12px;
     font-size: 13px;
@@ -70,15 +80,27 @@
 @media (max-width: 480px) {
   .card {
     margin-bottom: 16px;
+    align-items: center;
+  }
+
+  .card img {
+    width: 100%;
+    max-width: 240px;
+    height: auto;
+    aspect-ratio: 1;
   }
 
   .card p {
-    padding-left: 10px;
-    font-size: 12px;
+    padding-left: 0;
+    font-size: 13px;
+    text-align: center;
+    width: 100%;
   }
 
   .card h2 {
-    padding-left: 10px;
-    font-size: 15px;
+    padding-left: 0;
+    font-size: 16px;
+    text-align: center;
+    width: 100%;
   }
 }
