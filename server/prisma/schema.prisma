@@ -22,3 +22,14 @@ model Product {
 
   @@map("products")
 }
+
+model Service {
+  id          Int      @id @default(autoincrement())
+  name        String
+  price       Float
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("services")
+}

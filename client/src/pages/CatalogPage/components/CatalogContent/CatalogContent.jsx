@@ -1,72 +1,29 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { IoSearch } from "react-icons/io5";
 import ProductCard from "../ProductCard/ProductCard";
 import ProductModal from "../../../../components/ProductModal/ProductModal";
+import { useProducts } from "../../../../hooks/useProducts";
 import styles from "./CatalogContent.module.css";
-
-// Моковые данные
-const mockProducts = [
-  {
-    id: 1,
-    name: "1С Бухгалтерия ПРОФ",
-    price: 20100,
-    image: "/img/productPhoto.png",
-    category: "Бухгалтерский учет",
-  },
-  {
-    id: 2,
-    name: "1С Бухгалтерия КФО",
-    price: 51700,
-    image: "/img/productPhoto.png",
-    category: "Бухгалтерский учет",
-  },
-  {
-    id: 3,
-    name: "1С Бухгалтерия Базовая",
-    price: 4400,
-    image: "/img/productPhoto.png",
-    category: "Бухгалтерский учет",
-  },
-  {
-    id: 4,
-    name: "1С ЗУП ПРОф",
-    price: 34800,
-    image: "/img/productPhoto.png",
-    category: "Кадровый учет",
-  },
-  {
-    id: 5,
-    name: "1С:Управление торговлей Базовая",
-    price: 9700,
-    image: "/img/productPhoto.png",
-    category: "Торговый учет, продажи",
-  },
-  {
-    id: 6,
-    name: "1С:Документооборот ПРОФ",
-    price: 55300,
-    image: "/img/productPhoto.png",
-    category: "Производственный учет",
-  },
-];
 
 const categories = [
   "Бухгалтерский учет",
+  "Торговый учет",
   "Кадровый учет",
-  "Торговый учет, продажи",
-  "Складской учет",
-  "Производственный учет",
-  "Лицензии, интеграции",
+  "ERP системы",
+  "Делопроизводство",
+  "CRM системы",
+  "Услуги",
 ];
 
 const priceRanges = [
-  { label: "1.000 - 5.000 руб", min: 1000, max: 5000 },
-  { label: "5.000 - 10.000 руб", min: 5000, max: 10000 },
-  { label: "20.000 - 50.000 руб", min: 20000, max: 50000 },
+  { label: "1.000 - 10.000 руб", min: 1000, max: 10000 },
+  { label: "10.000 - 50.000 руб", min: 10000, max: 50000 },
   { label: "50.000 - 100.000 руб", min: 50000, max: 100000 },
+  { label: "100.000 - 200.000 руб", min: 100000, max: 200000 },
 ];
 
 export default function CatalogContent() {
+  const { products, loading, error } = useProducts();
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -100,34 +57,36 @@ export default function CatalogContent() {
     });
   };
 
-  const filteredProducts = mockProducts.filter((product) => {
-    // Фильтр по категориям
-    if (
-      selectedCategories.length > 0 &&
-      !selectedCategories.includes(product.category)
-    ) {
-      return false;
-    }
+  const filteredProducts = useMemo(() => {
+    return products.filter((product) => {
+      // Фильтр по категориям
+      if (
+        selectedCategories.length > 0 &&
+        !selectedCategories.includes(product.category)
+      ) {
+        return false;
+      }
 
-    // Фильтр по цене
-    if (selectedPriceRanges.length > 0) {
-      const inPriceRange = selectedPriceRanges.some((range) => {
-        const [min, max] = range.split("-").map(Number);
-        return product.price >= min && product.price <= max;
-      });
-      if (!inPriceRange) return false;
-    }
+      // Фильтр по цене
+      if (selectedPriceRanges.length > 0) {
+        const inPriceRange = selectedPriceRanges.some((range) => {
+          const [min, max] = range.split("-").map(Number);
+          return product.price >= min && product.price <= max;
+        });
+        if (!inPriceRange) return false;
+      }
 
-    // Фильтр по поиску
-    if (
-      searchQuery &&
-      !product.name.toLowerCase().includes(searchQuery.toLowerCase())
-    ) {
-      return false;
-    }
+      // Фильтр по поиску
+      if (
+        searchQuery &&
+        !product.name.toLowerCase().includes(searchQuery.toLowerCase())
+      ) {
+        return false;
+      }
 
-    return true;
-  });
+      return true;
+    });
+  }, [products, selectedCategories, selectedPriceRanges, searchQuery]);
 
   return (
     <div className={styles.catalogContent}>
@@ -191,9 +150,17 @@ export default function CatalogContent() {
             <p className={styles.resultsCount}>
               Отображается 1-12 из {filteredProducts.length} элементов
             </p>
-            <p className={styles.subtitle}>Выберите продукты 1С</p>
+            <p className={styles.subtitle}>Выберите продукты</p>
 
-            {filteredProducts.length === 0 ? (
+            {loading ? (
+              <div className={styles.loader}>
+                <p>Загрузка товаров...</p>
+              </div>
+            ) : error ? (
+              <div className={styles.error}>
+                <p>Ошибка: {error}</p>
+              </div>
+            ) : filteredProducts.length === 0 ? (
               <div className={styles.noResults}>
                 <p>По выбранным фильтрам товары не найдены</p>
                 <p className={styles.noResultsHint}>

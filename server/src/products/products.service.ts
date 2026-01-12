@@ -5,7 +5,16 @@ import { UpdateProductDto } from "./dto/update-product.dto";
 
 @Injectable()
 export class ProductsService {
+  private readonly baseUrl = process.env.BASE_URL || "http://localhost:3001";
+
   constructor(private prisma: PrismaService) {}
+
+  private formatProductWithImageUrl(product: any) {
+    return {
+      ...product,
+      image: product.image ? `${this.baseUrl}${product.image}` : null,
+    };
+  }
 
   async create(createProductDto: CreateProductDto) {
     return this.prisma.product.create({
@@ -15,10 +24,11 @@ export class ProductsService {
 
   async findAll(category?: string) {
     const where = category ? { category } : {};
-    return this.prisma.product.findMany({
+    const products = await this.prisma.product.findMany({
       where,
       orderBy: { createdAt: "desc" },
     });
+    return products.map((product) => this.formatProductWithImageUrl(product));
   }
 
   async findOne(id: number) {
@@ -29,7 +39,7 @@ export class ProductsService {
     if (!product) {
       throw new NotFoundException(`Product with ID ${id} not found`);
     }
-
+    this.formatProductWithImageUrl(product);
     return product;
   }
 
