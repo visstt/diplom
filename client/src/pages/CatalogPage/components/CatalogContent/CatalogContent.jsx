@@ -3,6 +3,8 @@ import { IoSearch } from "react-icons/io5";
 import ProductCard from "../ProductCard/ProductCard";
 import ProductModal from "../../../../components/ProductModal/ProductModal";
 import { useProducts } from "../../../../hooks/useProducts";
+import { getCart } from "../../../../api/cart";
+import { useAuth } from "../../../../contexts/AuthContext";
 import styles from "./CatalogContent.module.css";
 
 const categories = [
@@ -24,11 +26,27 @@ const priceRanges = [
 
 export default function CatalogContent() {
   const { products, loading, error } = useProducts();
+  const { isAuthenticated } = useAuth();
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const updateCartCount = async () => {
+    // Обновление счетчика корзины в Header
+    if (isAuthenticated) {
+      try {
+        const data = await getCart();
+        // Триггерим событие для обновления Header
+        window.dispatchEvent(
+          new CustomEvent("cartUpdated", { detail: data.count })
+        );
+      } catch (error) {
+        console.error("Ошибка загрузки корзины:", error);
+      }
+    }
+  };
 
   const handleProductClick = (product) => {
     setSelectedProduct(product);
@@ -186,6 +204,7 @@ export default function CatalogContent() {
         product={selectedProduct}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
+        onCartUpdate={updateCartCount}
       />
     </div>
   );

@@ -1,13 +1,84 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import styles from "./Header.module.css";
+import AuthModal from "../AuthModal/AuthModal";
+import RegisterModal from "../RegisterModal/RegisterModal";
+import CartModal from "../CartModal/CartModal";
+import { useAuth } from "../../contexts/AuthContext";
+import { getCart } from "../../api/cart";
 
 export default function Header() {
+  const navigate = useNavigate();
+  const { isAuthenticated, login, register } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [isCartModalOpen, setIsCartModalOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  const openAuthModal = () => {
+    setIsAuthModalOpen(true);
+    setIsRegisterModalOpen(false);
+  };
+
+  const openRegisterModal = () => {
+    setIsRegisterModalOpen(true);
+    setIsAuthModalOpen(false);
+  };
+
+  const closeModals = () => {
+    setIsAuthModalOpen(false);
+    setIsRegisterModalOpen(false);
+  };
+
+  const handleUserIconClick = () => {
+    if (isAuthenticated) {
+      navigate("/profile");
+    } else {
+      openAuthModal();
+    }
+  };
+
+  const handleCartClick = () => {
+    if (isAuthenticated) {
+      setIsCartModalOpen(true);
+    } else {
+      openAuthModal();
+    }
+  };
+
+  const updateCartCount = async () => {
+    if (isAuthenticated) {
+      try {
+        const data = await getCart();
+        setCartCount(data.count);
+      } catch (error) {
+        console.error("Ошибка загрузки корзины:", error);
+      }
+    } else {
+      setCartCount(0);
+    }
+  };
+
+  useEffect(() => {
+    updateCartCount();
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    // Слушаем событие обновления корзины
+    const handleCartUpdate = (event) => {
+      setCartCount(event.detail);
+    };
+    window.addEventListener("cartUpdated", handleCartUpdate);
+
+    return () => {
+      window.removeEventListener("cartUpdated", handleCartUpdate);
+    };
+  }, []);
 
   useEffect(() => {
     if (isMenuOpen) {
@@ -64,12 +135,44 @@ export default function Header() {
           </div>
 
           <div className={styles.icons_section}>
-            <img src="/img/people.svg" alt="people" />
-            <img src="/img/cart.svg" alt="cart" />
+            <img
+              src="/img/people.svg"
+              alt="people"
+              onClick={handleUserIconClick}
+              style={{ cursor: "pointer" }}
+            />
+            <div
+              className={styles.cartWrapper}
+              onClick={handleCartClick}
+              style={{ cursor: "pointer" }}
+            >
+              <img src="/img/cart.svg" alt="cart" />
+              {cartCount > 0 && (
+                <span className={styles.cartBadge}>{cartCount}</span>
+              )}
+            </div>
           </div>
         </div>
       </div>
       <div className={styles.stripe}></div>
+
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={closeModals}
+        onSwitchToRegister={openRegisterModal}
+        onLogin={login}
+      />
+      <RegisterModal
+        isOpen={isRegisterModalOpen}
+        onClose={closeModals}
+        onSwitchToLogin={openAuthModal}
+        onRegister={register}
+      />
+      <CartModal
+        isOpen={isCartModalOpen}
+        onClose={() => setIsCartModalOpen(false)}
+        onCartUpdate={setCartCount}
+      />
     </div>
   );
 }

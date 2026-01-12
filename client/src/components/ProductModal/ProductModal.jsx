@@ -1,7 +1,18 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import styles from "./ProductModal.module.css";
+import { addToCart } from "../../api/cart";
+import { useAuth } from "../../contexts/AuthContext";
 
-export default function ProductModal({ product, isOpen, onClose }) {
+export default function ProductModal({
+  product,
+  isOpen,
+  onClose,
+  onCartUpdate,
+}) {
+  const { isAuthenticated } = useAuth();
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -13,6 +24,27 @@ export default function ProductModal({ product, isOpen, onClose }) {
       document.body.style.overflow = "unset";
     };
   }, [isOpen]);
+
+  const handleAddToCart = async () => {
+    if (!isAuthenticated) {
+      toast.error("Войдите в аккаунт для добавления товара в корзину");
+      return;
+    }
+
+    try {
+      setIsAddingToCart(true);
+      await addToCart(product.id, 1);
+      if (onCartUpdate) {
+        onCartUpdate();
+      }
+      toast.success("Товар добавлен в корзину");
+    } catch (error) {
+      console.error("Ошибка добавления в корзину:", error);
+      toast.error("Ошибка при добавлении товара в корзину");
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
 
   if (!isOpen || !product) return null;
 
@@ -43,7 +75,13 @@ export default function ProductModal({ product, isOpen, onClose }) {
               {product.price.toLocaleString("ru-RU")} ₽
             </p>
 
-            <button className={styles.addToCartBtn}>Добавить в корзину</button>
+            <button
+              className={styles.addToCartBtn}
+              onClick={handleAddToCart}
+              disabled={isAddingToCart}
+            >
+              {isAddingToCart ? "Добавление..." : "Добавить в корзину"}
+            </button>
 
             {product.benefits && product.benefits.length > 0 && (
               <div className={styles.features}>
