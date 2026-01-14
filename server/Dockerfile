@@ -57,14 +57,10 @@ COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 # Копируем собранное приложение
 COPY --from=builder /app/dist ./dist
 
-# Копируем entrypoint скрипт
-COPY entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
-
 # Создаем директорию для uploads
 RUN mkdir -p uploads
 
 EXPOSE 3001
 
-# Запуск через entrypoint скрипт
-CMD ["/app/entrypoint.sh"]
+# Запуск с миграциями и seed
+CMD ["sh", "-c", "echo 'Waiting for database...' && sleep 5 && echo 'Running migrations...' && npx prisma migrate deploy && echo 'Running seed...' && (npx prisma db seed || echo 'Seed skipped') && echo 'Starting application...' && node dist/src/main.js"]
