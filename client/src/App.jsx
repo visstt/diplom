@@ -10,6 +10,7 @@ import ContactsPage from "./pages/ContactsPage/ContactsPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import CheckoutPage from "./pages/CheckoutPage/CheckoutPage";
 import AdminPage from "./pages/AdminPage/AdminPage";
+import ChatPage from "./pages/ChatPage/ChatPage";
 
 function App() {
   return (
@@ -65,6 +66,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <AdminPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/chat"
+            element={
+              <ProtectedRoute>
+                <ChatPage />
               </ProtectedRoute>
             }
           />

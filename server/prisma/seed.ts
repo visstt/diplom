@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import * as bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
@@ -6,6 +7,26 @@ async function main() {
   // Clear existing data
   await prisma.product.deleteMany();
   await prisma.service.deleteMany();
+
+  // Create admin user if not exists
+  const adminEmail = "admin@titan.ru";
+  const existingAdmin = await prisma.user.findUnique({
+    where: { email: adminEmail },
+  });
+
+  if (!existingAdmin) {
+    const hashedPassword = await bcrypt.hash("admin123", 10);
+    await prisma.user.create({
+      data: {
+        email: adminEmail,
+        password: hashedPassword,
+        firstName: "Администратор",
+        lastName: "Системы",
+        role: "admin",
+      },
+    });
+    console.log("Admin user created: admin@titan.ru / admin123");
+  }
 
   // Seed products - 1C software and services
   const products = [
@@ -221,24 +242,8 @@ async function main() {
     });
   }
 
-  // Создать админа (пароль: admin123)
-  const bcrypt = await import("bcrypt");
-  const hashedPassword = await bcrypt.hash("admin123", 10);
-
-  await prisma.user.upsert({
-    where: { email: "admin@titan.ru" },
-    update: {},
-    create: {
-      email: "admin@titan.ru",
-      password: hashedPassword,
-      firstName: "Администратор",
-      lastName: "Системы",
-      role: "admin",
-    },
-  });
-
-  console.log("Database seeded successfully!");
-  console.log("Admin user created: admin@titan.ru / admin123");
+  console.log("✅ Database seeded successfully!");
+  console.log("👤 Admin user: admin@titan.ru / admin123");
 }
 
 main()

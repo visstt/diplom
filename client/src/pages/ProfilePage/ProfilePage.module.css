@@ -53,10 +53,16 @@
   margin-bottom: 10px;
 }
 
-.adminBtn {
+.actionButtons {
+  display: flex;
+  gap: 12px;
   margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+.adminBtn,
+.chatBtn {
   padding: 10px 20px;
-  background: #f14f4f;
   color: white;
   border: none;
   border-radius: 8px;
@@ -64,13 +70,26 @@
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.adminBtn {
+  background: linear-gradient(135deg, #f14f4f 0%, #d43f3f 100%);
 }
 
 .adminBtn:hover {
-  background: #d43f3f;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(241, 79, 79, 0.4);
+}
+
+.chatBtn {
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+}
+
+.chatBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
 }
 
 .profileCard {
