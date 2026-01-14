@@ -9,6 +9,7 @@ import {
   Query,
   ParseIntPipe,
   HttpStatus,
+  UseGuards,
 } from "@nestjs/common";
 import {
   ApiTags,
@@ -22,6 +23,9 @@ import { ProductsService } from "./products.service";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
 import { Product } from "./entities/product.entity";
+import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
+import { RolesGuard } from "../auth/roles.guard";
+import { Roles } from "../auth/roles.decorator";
 
 @ApiTags("products")
 @Controller("products")
@@ -29,6 +33,8 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles("admin")
   @ApiOperation({ summary: "Создать новый товар" })
   @ApiBody({ type: CreateProductDto })
   @ApiResponse({
@@ -82,6 +88,8 @@ export class ProductsController {
   }
 
   @Patch(":id")
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles("admin")
   @ApiOperation({ summary: "Обновить товар" })
   @ApiParam({
     name: "id",
@@ -106,6 +114,8 @@ export class ProductsController {
   }
 
   @Delete(":id")
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles("admin")
   @ApiOperation({ summary: "Удалить товар" })
   @ApiParam({
     name: "id",

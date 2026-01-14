@@ -10,16 +10,24 @@ export class ProductsService {
   constructor(private prisma: PrismaService) {}
 
   private formatProductWithImageUrl(product: any) {
+    if (!product.image) {
+      return { ...product, image: null };
+    }
+    // Don't add baseUrl if image already contains the full URL
+    const image = product.image.startsWith('http://') || product.image.startsWith('https://') || product.image.includes(this.baseUrl)
+      ? product.image
+      : `${this.baseUrl}${product.image}`;
     return {
       ...product,
-      image: product.image ? `${this.baseUrl}${product.image}` : null,
+      image,
     };
   }
 
   async create(createProductDto: CreateProductDto) {
-    return this.prisma.product.create({
+    const product = await this.prisma.product.create({
       data: createProductDto,
     });
+    return this.formatProductWithImageUrl(product);
   }
 
   async findAll(category?: string) {
@@ -39,16 +47,44 @@ export class ProductsService {
     if (!product) {
       throw new NotFoundException(`Product with ID ${id} not found`);
     }
-    this.formatProductWithImageUrl(product);
-    return product;
+    return this.formatProductWithImageUrl(product);
+  }
+
+  private cleanImageUrl(imageUrl: string): string {
+    if (!imageUrl) return imageUrl;
+    
+    // If it's already a full URL, extract the path part
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+      // Extract path from full URL
+      try {
+        const url = new URL(imageUrl);
+        return url.pathname;
+      } catch {
+        return imageUrl;
+      }
+    }
+    
+    return imageUrl;
   }
 
   async update(id: number, updateProductDto: UpdateProductDto) {
-    await this.findOne(id); // Check if exists
-    return this.prisma.product.update({
+    // Check if exists
+    const existing = await this.prisma.product.findUnique({ where: { id } });
+    if (!existing) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+    
+    // Clean image URL to prevent duplication
+    const cleanedData = {
+      ...updateProductDto,
+      image: updateProductDto.image ? this.cleanImageUrl(updateProductDto.image) : updateProductDto.image
+    };
+    
+    const product = await this.prisma.product.update({
       where: { id },
-      data: updateProductDto,
+      data: cleanedData,
     });
+    return this.formatProductWithImageUrl(product);
   }
 
   async remove(id: number) {

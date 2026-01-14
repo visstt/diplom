@@ -29,7 +29,6 @@ services:
       - "3001:3001"
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/Titan?schema=public
-      JWT_SECRET: your-secret-jwt-key-change-this-in-production
       PORT: 3001
       TELEGRAM_BOT_TOKEN: 8528159845:AAFYWtLh2jmO9yHNws3UrhWM3_BuMzu9oZU
       TELEGRAM_CHAT_ID: -5138935561

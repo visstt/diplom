@@ -8,6 +8,7 @@ import {
   Delete,
   ParseIntPipe,
   HttpStatus,
+  UseGuards,
 } from "@nestjs/common";
 import {
   ApiTags,
@@ -20,6 +21,9 @@ import { ServicesService } from "./services.service";
 import { CreateServiceDto } from "./dto/create-service.dto";
 import { UpdateServiceDto } from "./dto/update-service.dto";
 import { Service } from "./entities/service.entity";
+import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
+import { RolesGuard } from "../auth/roles.guard";
+import { Roles } from "../auth/roles.decorator";
 
 @ApiTags("services")
 @Controller("services")
@@ -27,6 +31,8 @@ export class ServicesController {
   constructor(private readonly servicesService: ServicesService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles("admin")
   @ApiOperation({ summary: "Создать новую услугу" })
   @ApiBody({ type: CreateServiceDto })
   @ApiResponse({
@@ -74,6 +80,8 @@ export class ServicesController {
   }
 
   @Patch(":id")
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles("admin")
   @ApiOperation({ summary: "Обновить услугу" })
   @ApiParam({
     name: "id",
@@ -98,6 +106,8 @@ export class ServicesController {
   }
 
   @Delete(":id")
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles("admin")
   @ApiOperation({ summary: "Удалить услугу" })
   @ApiParam({
     name: "id",

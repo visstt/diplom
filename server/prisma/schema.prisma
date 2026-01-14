@@ -11,7 +11,7 @@ model Product {
   id          Int        @id @default(autoincrement())
   name        String
   price       Float
-  image       String
+  image       String?
   description String?
   category    String?
   variants    String[]   @default([])
@@ -44,6 +44,7 @@ model User {
   phone     String?
   birthDate DateTime?
   language  String     @default("ru")
+  role      String     @default("user")
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   cartItems CartItem[]

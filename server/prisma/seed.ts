@@ -221,7 +221,24 @@ async function main() {
     });
   }
 
+  // Создать админа (пароль: admin123)
+  const bcrypt = await import("bcrypt");
+  const hashedPassword = await bcrypt.hash("admin123", 10);
+
+  await prisma.user.upsert({
+    where: { email: "admin@titan.ru" },
+    update: {},
+    create: {
+      email: "admin@titan.ru",
+      password: hashedPassword,
+      firstName: "Администратор",
+      lastName: "Системы",
+      role: "admin",
+    },
+  });
+
   console.log("Database seeded successfully!");
+  console.log("Admin user created: admin@titan.ru / admin123");
 }
 
 main()

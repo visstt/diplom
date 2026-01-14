@@ -18,12 +18,13 @@ export class CreateProductDto {
   @Min(0)
   price: number;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: "URL изображения товара",
     example: "/img/grass-roll-1.jpg",
   })
+  @IsOptional()
   @IsString()
-  image: string;
+  image?: string;
 
   @ApiPropertyOptional({
     description: "Описание товара",

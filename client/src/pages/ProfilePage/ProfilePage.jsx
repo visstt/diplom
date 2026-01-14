@@ -121,6 +121,14 @@ export default function ProfilePage() {
           <div className={styles.userInfo}>
             <h1>{formData.firstName || "Пользователь"}</h1>
             <p>{user?.email}</p>
+            {user?.role === "admin" && (
+              <button
+                className={styles.adminBtn}
+                onClick={() => navigate("/admin")}
+              >
+                Админ-панель
+              </button>
+            )}
           </div>
         </div>
 

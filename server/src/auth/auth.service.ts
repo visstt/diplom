@@ -53,6 +53,7 @@ export class AuthService {
         phone: user.phone,
         birthDate: user.birthDate,
         language: user.language,
+        role: user.role,
         createdAt: user.createdAt,
       },
     };
@@ -90,6 +91,7 @@ export class AuthService {
         phone: user.phone,
         birthDate: user.birthDate,
         language: user.language,
+        role: user.role,
         createdAt: user.createdAt,
       },
     };

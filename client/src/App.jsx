@@ -9,6 +9,7 @@ import AboutPage from "./pages/AboutPage/AboutPage";
 import ContactsPage from "./pages/ContactsPage/ContactsPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import CheckoutPage from "./pages/CheckoutPage/CheckoutPage";
+import AdminPage from "./pages/AdminPage/AdminPage";
 
 function App() {
   return (
@@ -56,6 +57,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <CheckoutPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <AdminPage />
               </ProtectedRoute>
             }
           />
