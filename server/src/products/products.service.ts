@@ -14,9 +14,12 @@ export class ProductsService {
       return { ...product, image: null };
     }
     // Don't add baseUrl if image already contains the full URL
-    const image = product.image.startsWith('http://') || product.image.startsWith('https://') || product.image.includes(this.baseUrl)
-      ? product.image
-      : `${this.baseUrl}${product.image}`;
+    const image =
+      product.image.startsWith("http://") ||
+      product.image.startsWith("https://") ||
+      product.image.includes(this.baseUrl)
+        ? product.image
+        : `${this.baseUrl}${product.image}`;
     return {
       ...product,
       image,
@@ -52,9 +55,9 @@ export class ProductsService {
 
   private cleanImageUrl(imageUrl: string): string {
     if (!imageUrl) return imageUrl;
-    
+
     // If it's already a full URL, extract the path part
-    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+    if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
       // Extract path from full URL
       try {
         const url = new URL(imageUrl);
@@ -63,7 +66,7 @@ export class ProductsService {
         return imageUrl;
       }
     }
-    
+
     return imageUrl;
   }
 
@@ -73,13 +76,15 @@ export class ProductsService {
     if (!existing) {
       throw new NotFoundException(`Product with ID ${id} not found`);
     }
-    
+
     // Clean image URL to prevent duplication
     const cleanedData = {
       ...updateProductDto,
-      image: updateProductDto.image ? this.cleanImageUrl(updateProductDto.image) : updateProductDto.image
+      image: updateProductDto.image
+        ? this.cleanImageUrl(updateProductDto.image)
+        : updateProductDto.image,
     };
-    
+
     const product = await this.prisma.product.update({
       where: { id },
       data: cleanedData,
