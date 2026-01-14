@@ -17,10 +17,9 @@ RUN npm config set fetch-retry-maxtimeout 600000 && \
     npm config set maxsockets 5 && \
     npm ci --legacy-peer-deps
 
-# Генерируем Prisma Client с явным указанием целевых платформ
-ENV PRISMA_CLI_BINARY_TARGETS="linux-musl-openssl-3.0.x,native"
+# Генерируем Prisma Client для Alpine Linux
 ENV PRISMA_ENGINES_MIRROR="https://binaries.prisma.sh"
-RUN npx prisma generate --schema=./prisma/schema.prisma || npm run prisma:generate
+RUN npx prisma generate --schema=./prisma/schema.prisma
 
 # Копируем исходники
 COPY . .
