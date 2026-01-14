@@ -23,6 +23,8 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
+      args:
+        - PRISMA_CLI_BINARY_TARGETS=linux-musl-openssl-3.0.x,native
     container_name: diplom1c_server
     restart: unless-stopped
     ports:
@@ -32,6 +34,7 @@ services:
       PORT: 3001
       TELEGRAM_BOT_TOKEN: 8528159845:AAFYWtLh2jmO9yHNws3UrhWM3_BuMzu9oZU
       TELEGRAM_CHAT_ID: -5138935561
+      PRISMA_CLI_BINARY_TARGETS: linux-musl-openssl-3.0.x,native
     depends_on:
       db:
         condition: service_healthy
