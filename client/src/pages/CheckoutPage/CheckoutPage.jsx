@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { IoCall } from "react-icons/io5";
 import { IoTrashOutline } from "react-icons/io5";
 import { getCart, removeFromCart, clearCart } from "../../api/cart";
+import { checkoutProducts } from "../../api/analytics";
 import { useAuth } from "../../contexts/AuthContext";
 import OrderSuccessModal from "../../components/OrderSuccessModal/OrderSuccessModal";
 import styles from "./CheckoutPage.module.css";
@@ -93,6 +94,9 @@ export default function CheckoutPage() {
     }
 
     try {
+      // Записываем покупки в аналитику перед очисткой корзины
+      await checkoutProducts();
+
       // Очищаем корзину
       await clearCart();
 

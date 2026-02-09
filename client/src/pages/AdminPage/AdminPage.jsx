@@ -6,6 +6,7 @@ import { useProducts } from "../../hooks/useProducts";
 import { useServices } from "../../hooks/useServices";
 import { useAuth } from "../../contexts/AuthContext";
 import { getCookie } from "../../utils/cookies";
+import AnalyticsTab from "./components/AnalyticsTab";
 import toast from "react-hot-toast";
 import styles from "./AdminPage.module.css";
 
@@ -252,8 +253,18 @@ export default function AdminPage() {
             >
               Услуги
             </button>
+            <button
+              className={activeTab === "analytics" ? styles.activeTab : ""}
+              onClick={() => setActiveTab("analytics")}
+            >
+              📊 Аналитика
+            </button>
           </div>
 
+          {activeTab === "analytics" ? (
+            <AnalyticsTab />
+          ) : (
+          <>
           <button
             className={styles.createBtn}
             onClick={() =>
@@ -450,6 +461,8 @@ export default function AdminPage() {
                 </div>
               </div>
             </div>
+          )}
+          </>
           )}
         </div>
       </main>

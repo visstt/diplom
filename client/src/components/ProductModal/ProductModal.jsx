@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import styles from "./ProductModal.module.css";
 import { addToCart } from "../../api/cart";
+import { incrementProductView } from "../../api/analytics";
 import { useAuth } from "../../contexts/AuthContext";
 
 export default function ProductModal({
@@ -24,6 +25,15 @@ export default function ProductModal({
       document.body.style.overflow = "unset";
     };
   }, [isOpen]);
+
+  // Инкрементировать просмотры при открытии модалки
+  useEffect(() => {
+    if (isOpen && product?.id) {
+      incrementProductView(product.id).catch(() => {
+        // Ошибку просмотра игнорируем — не критично
+      });
+    }
+  }, [isOpen, product?.id]);
 
   const handleAddToCart = async () => {
     if (!isAuthenticated) {

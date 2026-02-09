@@ -10,6 +10,7 @@ import {
   ParseIntPipe,
   HttpStatus,
   UseGuards,
+  Request,
 } from "@nestjs/common";
 import {
   ApiTags,
@@ -50,6 +51,38 @@ export class ProductsController {
     return this.productsService.create(createProductDto);
   }
 
+  // ============ АНАЛИТИКА (ставим ДО :id, чтобы маршруты не конфликтовали) ============
+
+  @Get("popular")
+  @ApiOperation({ summary: "Получить топ популярных товаров по покупкам" })
+  @ApiQuery({
+    name: "limit",
+    required: false,
+    description: "Количество товаров (по умолчанию 10)",
+    example: 10,
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "Топ популярных товаров",
+  })
+  getPopular(@Query("limit") limit?: string) {
+    return this.productsService.getPopularProducts(
+      limit ? parseInt(limit, 10) : 10,
+    );
+  }
+
+  @Get("analytics")
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles("admin")
+  @ApiOperation({ summary: "Получить полную аналитику по товарам (только для админа)" })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "Аналитика по товарам",
+  })
+  getAnalytics() {
+    return this.productsService.getAnalytics();
+  }
+
   @Get()
   @ApiOperation({ summary: "Получить все товары" })
   @ApiQuery({
@@ -87,6 +120,41 @@ export class ProductsController {
     return this.productsService.findOne(id);
   }
 
+  @Get(":id/stats")
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles("admin")
+  @ApiOperation({ summary: "Получить статистику товара (только для админа)" })
+  @ApiParam({ name: "id", description: "ID товара", example: 1 })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "Статистика товара",
+  })
+  getStats(@Param("id", ParseIntPipe) id: number) {
+    return this.productsService.getProductStats(id);
+  }
+
+  @Post(":id/view")
+  @ApiOperation({ summary: "Инкрементировать счётчик просмотров товара" })
+  @ApiParam({ name: "id", description: "ID товара", example: 1 })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "Просмотр записан",
+  })
+  incrementView(@Param("id", ParseIntPipe) id: number) {
+    return this.productsService.incrementViewCount(id);
+  }
+
+  @Post("checkout")
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: "Записать покупки из корзины при оформлении заказа" })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "Покупки записаны",
+  })
+  checkout(@Request() req) {
+    return this.productsService.recordPurchasesFromCart(req.user.id);
+  }
+
   @Patch(":id")
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles("admin")
@@ -108,7 +176,7 @@ export class ProductsController {
   })
   update(
     @Param("id", ParseIntPipe) id: number,
-    @Body() updateProductDto: UpdateProductDto
+    @Body() updateProductDto: UpdateProductDto,
   ) {
     return this.productsService.update(id, updateProductDto);
   }
