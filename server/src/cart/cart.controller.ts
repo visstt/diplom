@@ -8,28 +8,51 @@ import {
   Param,
   UseGuards,
   Request,
+  HttpStatus,
 } from "@nestjs/common";
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBody,
+  ApiParam,
+  ApiResponse,
+  ApiBearerAuth,
+} from "@nestjs/swagger";
 import { CartService } from "./cart.service";
 import { AddToCartDto } from "./dto/add-to-cart.dto";
 import { UpdateQuantityDto } from "./dto/update-quantity.dto";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 
+@ApiTags("cart")
+@ApiBearerAuth("access-token")
 @Controller("cart")
 @UseGuards(JwtAuthGuard)
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
   @Get()
+  @ApiOperation({ summary: "Получить корзину текущего пользователя" })
+  @ApiResponse({ status: HttpStatus.OK, description: "Содержимое корзины" })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: "Не авторизован" })
   async getCart(@Request() req) {
     return this.cartService.getCart(req.user.id);
   }
 
   @Post()
+  @ApiOperation({ summary: "Добавить товар в корзину" })
+  @ApiBody({ type: AddToCartDto })
+  @ApiResponse({ status: HttpStatus.CREATED, description: "Товар добавлен в корзину" })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: "Не авторизован" })
   async addToCart(@Request() req, @Body() addToCartDto: AddToCartDto) {
     return this.cartService.addToCart(req.user.id, addToCartDto);
   }
 
   @Put(":id")
+  @ApiOperation({ summary: "Обновить количество товара в корзине" })
+  @ApiParam({ name: "id", description: "ID записи в корзине", example: 1 })
+  @ApiBody({ type: UpdateQuantityDto })
+  @ApiResponse({ status: HttpStatus.OK, description: "Количество обновлено" })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: "Не авторизован" })
   async updateQuantity(
     @Request() req,
     @Param("id") id: string,
@@ -43,11 +66,18 @@ export class CartController {
   }
 
   @Delete(":id")
+  @ApiOperation({ summary: "Удалить товар из корзины" })
+  @ApiParam({ name: "id", description: "ID записи в корзине", example: 1 })
+  @ApiResponse({ status: HttpStatus.OK, description: "Товар удалён из корзины" })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: "Не авторизован" })
   async removeFromCart(@Request() req, @Param("id") id: string) {
     return this.cartService.removeFromCart(req.user.id, +id);
   }
 
   @Delete()
+  @ApiOperation({ summary: "Очистить корзину" })
+  @ApiResponse({ status: HttpStatus.OK, description: "Корзина очищена" })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: "Не авторизован" })
   async clearCart(@Request() req) {
     return this.cartService.clearCart(req.user.id);
   }

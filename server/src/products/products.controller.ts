@@ -19,6 +19,7 @@ import {
   ApiParam,
   ApiQuery,
   ApiBody,
+  ApiBearerAuth,
 } from "@nestjs/swagger";
 import { ProductsService } from "./products.service";
 import { CreateProductDto } from "./dto/create-product.dto";
@@ -29,6 +30,7 @@ import { RolesGuard } from "../auth/roles.guard";
 import { Roles } from "../auth/roles.decorator";
 
 @ApiTags("products")
+@ApiBearerAuth("access-token")
 @Controller("products")
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}

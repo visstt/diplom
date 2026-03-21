@@ -12,9 +12,10 @@ import { extname } from "path";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { RolesGuard } from "../auth/roles.guard";
 import { Roles } from "../auth/roles.decorator";
-import { ApiTags, ApiOperation, ApiConsumes, ApiBody } from "@nestjs/swagger";
+import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiBearerAuth } from "@nestjs/swagger";
 
 @ApiTags("upload")
+@ApiBearerAuth("access-token")
 @Controller("upload")
 export class UploadController {
   @Post("image")

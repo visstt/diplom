@@ -16,6 +16,7 @@ import {
   ApiResponse,
   ApiParam,
   ApiBody,
+  ApiBearerAuth,
 } from "@nestjs/swagger";
 import { ServicesService } from "./services.service";
 import { CreateServiceDto } from "./dto/create-service.dto";
@@ -26,6 +27,7 @@ import { RolesGuard } from "../auth/roles.guard";
 import { Roles } from "../auth/roles.decorator";
 
 @ApiTags("services")
+@ApiBearerAuth("access-token")
 @Controller("services")
 export class ServicesController {
   constructor(private readonly servicesService: ServicesService) {}

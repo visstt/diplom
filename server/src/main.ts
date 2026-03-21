@@ -36,7 +36,24 @@ async function bootstrap() {
     .setTitle("Titan Products API")
     .setDescription("API для управления каталогом товаров Titan")
     .setVersion("1.0")
-    .addTag("products")
+    .addBearerAuth(
+      {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+        name: "Authorization",
+        in: "header",
+      },
+      "access-token",
+    )
+    .addTag("auth", "Аутентификация и регистрация")
+    .addTag("products", "Управление товарами")
+    .addTag("services", "Управление услугами")
+    .addTag("cart", "Корзина пользователя")
+    .addTag("messages", "Сообщения и чаты")
+    .addTag("requests", "Заявки на услуги")
+    .addTag("users", "Профиль пользователя")
+    .addTag("upload", "Загрузка файлов")
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("api", app, document);
