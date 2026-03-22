@@ -41,7 +41,18 @@ export class UsersController {
   @Put("profile")
   @ApiOperation({ summary: "Обновить профиль текущего пользователя" })
   @ApiBody({ type: UpdateUserDto })
-  @ApiResponse({ status: HttpStatus.OK, description: "Профиль обновлён" })
+  @ApiResponse({ status: HttpStatus.OK, description: "Профиль обновлён",
+    schema: {
+      example: {
+        id: 1,
+        email: "user@example.com",
+        firstName: "Иван",
+        lastName: "Иванов",
+        phone: "+7 (999) 123-45-67",
+        role: "user",
+      },
+    },
+  })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: "Не авторизован" })
   async updateProfile(@Request() req, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.updateProfile(req.user.id, updateUserDto);

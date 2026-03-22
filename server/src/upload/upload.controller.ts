@@ -12,7 +12,7 @@ import { extname } from "path";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { RolesGuard } from "../auth/roles.guard";
 import { Roles } from "../auth/roles.decorator";
-import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiBearerAuth } from "@nestjs/swagger";
+import { ApiTags, ApiOperation, ApiConsumes, ApiBody, ApiBearerAuth, ApiResponse } from "@nestjs/swagger";
 
 @ApiTags("upload")
 @ApiBearerAuth("access-token")
@@ -60,6 +60,12 @@ export class UploadController {
       },
     },
   })
+  @ApiResponse({
+    status: 201,
+    description: "Изображение загружено",
+    schema: { example: { filename: "file-1741234567890-123456789.jpg", url: "/uploads/file-1741234567890-123456789.jpg" } },
+  })
+  @ApiResponse({ status: 400, description: "Файл не предоставлен / недопустимый формат" })
   uploadFile(@UploadedFile() file: Express.Multer.File) {
     if (!file) {
       throw new BadRequestException("File is required");

@@ -66,6 +66,7 @@ export class ProductsController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: "Топ популярных товаров",
+    type: [Product],
   })
   getPopular(@Query("limit") limit?: string) {
     return this.productsService.getPopularProducts(
@@ -80,6 +81,17 @@ export class ProductsController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: "Аналитика по товарам",
+    schema: {
+      example: [
+        {
+          id: 1,
+          name: "1С Бухгалтерия",
+          views: 120,
+          purchases: 45,
+          price: 4400,
+        },
+      ],
+    },
   })
   getAnalytics() {
     return this.productsService.getAnalytics();
@@ -130,6 +142,9 @@ export class ProductsController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: "Статистика товара",
+    schema: {
+      example: { id: 1, name: "1С Бухгалтерия", views: 120, purchases: 45 },
+    },
   })
   getStats(@Param("id", ParseIntPipe) id: number) {
     return this.productsService.getProductStats(id);
@@ -141,6 +156,7 @@ export class ProductsController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: "Просмотр записан",
+    schema: { example: { id: 1, name: "1С Бухгалтерия", views: 121 } },
   })
   incrementView(@Param("id", ParseIntPipe) id: number) {
     return this.productsService.incrementViewCount(id);
@@ -152,6 +168,7 @@ export class ProductsController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: "Покупки записаны",
+    schema: { example: { recorded: 3 } },
   })
   checkout(@Request() req) {
     return this.productsService.recordPurchasesFromCart(req.user.id);

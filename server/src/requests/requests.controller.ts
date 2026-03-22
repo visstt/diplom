@@ -20,6 +20,7 @@ export class RequestsController {
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: "Заявка успешно отправлена",
+    schema: { example: { ok: true, message: "Заявка принята" } },
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,

@@ -32,7 +32,20 @@ export class MessagesController {
   @Post()
   @ApiOperation({ summary: "Отправить сообщение" })
   @ApiBody({ type: CreateMessageDto })
-  @ApiResponse({ status: HttpStatus.CREATED, description: "Сообщение отправлено" })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: "Сообщение отправлено",
+    schema: {
+      example: {
+        id: 5,
+        content: "Здравствуйте! Хочу узнать подробнее о товаре.",
+        senderId: 2,
+        receiverId: 1,
+        isRead: false,
+        createdAt: "2026-03-22T10:00:00.000Z",
+      },
+    },
+  })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: "Не авторизован" })
   create(@Request() req, @Body() createMessageDto: CreateMessageDto) {
     return this.messagesService.create(req.user.id, createMessageDto);
@@ -41,7 +54,22 @@ export class MessagesController {
   // Получить чат пользователя с админом
   @Get("my-chat")
   @ApiOperation({ summary: "Получить свой чат с администратором" })
-  @ApiResponse({ status: HttpStatus.OK, description: "История чата с администратором" })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "История чата с администратором",
+    schema: {
+      example: [
+        {
+          id: 1,
+          content: "Здравствуйте!",
+          senderId: 2,
+          receiverId: 1,
+          isRead: true,
+          createdAt: "2026-03-22T09:00:00.000Z",
+        },
+      ],
+    },
+  })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: "Не авторизован" })
   getUserChat(@Request() req) {
     return this.messagesService.getUserChat(req.user.id);
@@ -50,7 +78,24 @@ export class MessagesController {
   // Получить все чаты для админа
   @Get("admin/chats")
   @ApiOperation({ summary: "Получить все чаты (только для админа)" })
-  @ApiResponse({ status: HttpStatus.OK, description: "Список чатов всех пользователей" })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "Список чатов всех пользователей",
+    schema: {
+      example: [
+        {
+          userId: 2,
+          firstName: "Иван",
+          lastName: "Иванов",
+          unreadCount: 2,
+          lastMessage: {
+            content: "Здравствуйте!",
+            createdAt: "2026-03-22T09:00:00.000Z",
+          },
+        },
+      ],
+    },
+  })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: "Не авторизован" })
   getAdminChats(@Request() req) {
     return this.messagesService.getAdminChats(req.user.id);
@@ -69,7 +114,22 @@ export class MessagesController {
   @Get("conversation/:userId")
   @ApiOperation({ summary: "Получить переписку с конкретным пользователем" })
   @ApiParam({ name: "userId", description: "ID пользователя", example: 2 })
-  @ApiResponse({ status: HttpStatus.OK, description: "Переписка с пользователем" })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "Переписка с пользователем",
+    schema: {
+      example: [
+        {
+          id: 1,
+          content: "Здравствуйте!",
+          senderId: 2,
+          receiverId: 1,
+          isRead: true,
+          createdAt: "2026-03-22T09:00:00.000Z",
+        },
+      ],
+    },
+  })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: "Не авторизован" })
   getConversation(@Request() req, @Param("userId") userId: string) {
     return this.messagesService.getConversation(req.user.id, parseInt(userId));
@@ -79,7 +139,11 @@ export class MessagesController {
   @Patch("mark-read/:userId")
   @ApiOperation({ summary: "Отметить сообщения от пользователя как прочитанные" })
   @ApiParam({ name: "userId", description: "ID пользователя-отправителя", example: 2 })
-  @ApiResponse({ status: HttpStatus.OK, description: "Сообщения отмечены как прочитанные" })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "Сообщения отмечены как прочитанные",
+    schema: { example: { count: 2 } },
+  })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: "Не авторизован" })
   markAsRead(@Request() req, @Param("userId") userId: string) {
     return this.messagesService.markAsRead(req.user.id, parseInt(userId));
