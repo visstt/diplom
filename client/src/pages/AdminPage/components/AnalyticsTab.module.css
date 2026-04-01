@@ -1,48 +1,42 @@
 .analyticsContainer {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
 .loading,
 .error {
   text-align: center;
   padding: 40px;
-  font-size: 18px;
-  color: #666;
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: #888;
 }
 
-/* Сводные карточки */
+/* Summary cards */
 .summaryCards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
 }
 
 .card {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
   padding: 20px;
-  background: linear-gradient(135deg, #ffffff 0%, #fafbff 100%);
+  background: #fff;
   border-radius: 16px;
-  border: 2px solid #e8e6f5;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(72, 66, 131, 0.08);
-}
-
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(72, 66, 131, 0.15);
-  border-color: #484283;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .cardIcon {
-  font-size: 36px;
+  font-size: 28px;
   color: #484283;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .cardContent {
@@ -51,37 +45,39 @@
 }
 
 .cardValue {
-  font-size: 28px;
+  font-family: var(--font-body);
+  font-size: 24px;
   font-weight: 800;
-  color: #484283;
+  color: #1a1a1a;
   line-height: 1.2;
 }
 
 .cardLabel {
+  font-family: var(--font-body);
   font-size: 13px;
-  color: #888;
+  color: #999;
   font-weight: 500;
 }
 
-/* Переключатель секций */
+/* Section tabs */
 .sectionTabs {
   display: flex;
-  gap: 8px;
-  border-bottom: 2px solid #e0e0e0;
-  padding-bottom: 0;
+  gap: 4px;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .sectionTabs button {
-  padding: 10px 20px;
+  padding: 10px 18px;
   background: none;
   border: none;
   cursor: pointer;
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
-  color: #888;
-  border-bottom: 3px solid transparent;
-  transition: all 0.3s ease;
-  margin-bottom: -2px;
+  color: #999;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.2s;
 }
 
 .sectionTabs button:hover {
@@ -93,44 +89,44 @@
   border-bottom-color: #484283 !important;
 }
 
-/* Графики */
+/* Charts */
 .chartsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 20px;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
 }
 
 .chartBlock {
-  background: white;
+  background: #fff;
   border-radius: 16px;
   padding: 24px;
-  border: 2px solid #f0f0f0;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .chartBlock h3 {
   margin: 0 0 16px 0;
-  color: #484283;
-  font-size: 16px;
+  font-family: var(--font-body);
+  font-size: 15px;
   font-weight: 700;
+  color: #1a1a1a;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .chartBlockFull {
-  background: white;
+  background: #fff;
   border-radius: 16px;
   padding: 24px;
-  border: 2px solid #f0f0f0;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .chartBlockFull h3 {
   margin: 0 0 16px 0;
-  color: #484283;
-  font-size: 16px;
+  font-family: var(--font-body);
+  font-size: 15px;
   font-weight: 700;
+  color: #1a1a1a;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -138,25 +134,26 @@
 
 .noData {
   text-align: center;
-  color: #aaa;
+  font-family: var(--font-body);
+  color: #999;
   padding: 40px 0;
-  font-style: italic;
+  font-size: 14px;
 }
 
-/* Таблица */
+/* Table */
 .tableContainer {
-  background: white;
+  background: #fff;
   border-radius: 16px;
   padding: 24px;
-  border: 2px solid #f0f0f0;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .tableContainer h3 {
   margin: 0 0 16px 0;
-  color: #484283;
-  font-size: 16px;
+  font-family: var(--font-body);
+  font-size: 15px;
   font-weight: 700;
+  color: #1a1a1a;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -164,16 +161,18 @@
 
 .tableWrapper {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .analyticsTable {
   width: 100%;
   border-collapse: collapse;
+  font-family: var(--font-body);
   font-size: 14px;
 }
 
 .analyticsTable thead {
-  background: linear-gradient(135deg, #484283 0%, #362f65 100%);
+  background: #484283;
   color: white;
 }
 
@@ -182,6 +181,7 @@
   text-align: left;
   font-weight: 600;
   white-space: nowrap;
+  font-size: 13px;
 }
 
 .analyticsTable th:first-child {
@@ -199,7 +199,7 @@
 }
 
 .analyticsTable tbody tr:hover {
-  background: #fafbff;
+  background: #fafafa;
 }
 
 .analyticsTable tbody tr:last-child td:first-child {
@@ -210,31 +210,31 @@
   border-radius: 0 0 8px 0;
 }
 
-/* Кнопка обновления */
+/* Refresh button */
 .refreshBtn {
   align-self: flex-start;
-  padding: 12px 24px;
-  background: linear-gradient(135deg, #484283 0%, #362f65 100%);
+  padding: 10px 20px;
+  background: #484283;
   color: white;
   border: none;
   border-radius: 10px;
   cursor: pointer;
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(72, 66, 131, 0.2);
+  transition: opacity 0.2s;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .refreshBtn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(72, 66, 131, 0.3);
+  opacity: 0.9;
 }
 
-/* Адаптив */
-@media (max-width: 768px) {
+/* ---- Responsive ---- */
+
+@media (max-width: 1024px) {
   .summaryCards {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -242,13 +242,47 @@
   .chartsGrid {
     grid-template-columns: 1fr;
   }
+}
+
+@media (max-width: 768px) {
+  .summaryCards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .card {
+    padding: 16px;
+    gap: 10px;
+  }
+
+  .cardValue {
+    font-size: 20px;
+  }
+
+  .cardIcon {
+    font-size: 22px;
+  }
 
   .sectionTabs {
-    flex-wrap: wrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .sectionTabs button {
     padding: 8px 14px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .chartBlock,
+  .chartBlockFull,
+  .tableContainer {
+    padding: 16px;
+  }
+
+  .analyticsTable th,
+  .analyticsTable td {
+    padding: 8px 10px;
     font-size: 13px;
   }
 }
@@ -256,5 +290,29 @@
 @media (max-width: 480px) {
   .summaryCards {
     grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .cardValue {
+    font-size: 18px;
+  }
+
+  .cardLabel {
+    font-size: 12px;
+  }
+
+  .chartBlock,
+  .chartBlockFull,
+  .tableContainer {
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  .refreshBtn {
+    width: 100%;
+    justify-content: center;
   }
 }

@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { UserCircle } from "lucide-react";
 import styles from "./Header.module.css";
 import AuthModal from "../AuthModal/AuthModal";
 import RegisterModal from "../RegisterModal/RegisterModal";
@@ -9,7 +10,7 @@ import { getCart } from "../../api/cart";
 
 export default function Header() {
   const navigate = useNavigate();
-  const { isAuthenticated, login, register } = useAuth();
+  const { isAuthenticated, login, register, user } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
@@ -52,7 +53,7 @@ export default function Header() {
   };
 
   const updateCartCount = async () => {
-    if (isAuthenticated) {
+    if (isAuthenticated && user?.role !== "admin") {
       try {
         const data = await getCart();
         setCartCount(data.count);
@@ -135,22 +136,25 @@ export default function Header() {
           </div>
 
           <div className={styles.icons_section}>
-            <img
-              src="/img/people.svg"
-              alt="people"
+            <UserCircle
+              size={32}
+              color="#ffffff"
+              strokeWidth={1.2}
               onClick={handleUserIconClick}
               style={{ cursor: "pointer" }}
             />
-            <div
-              className={styles.cartWrapper}
-              onClick={handleCartClick}
-              style={{ cursor: "pointer" }}
-            >
-              <img src="/img/cart.svg" alt="cart" />
-              {cartCount > 0 && (
-                <span className={styles.cartBadge}>{cartCount}</span>
-              )}
-            </div>
+            {user?.role !== "admin" && (
+              <div
+                className={styles.cartWrapper}
+                onClick={handleCartClick}
+                style={{ cursor: "pointer" }}
+              >
+                <img src="/img/cart.svg" alt="cart" />
+                {cartCount > 0 && (
+                  <span className={styles.cartBadge}>{cartCount}</span>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

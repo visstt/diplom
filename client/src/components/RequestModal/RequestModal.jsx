@@ -33,6 +33,19 @@ export default function RequestModal({ isOpen, onClose, serviceName }) {
     }));
   };
 
+  const handlePhoneChange = (e) => {
+    const digits = e.target.value.replace(/\D/g, "").slice(0, 11);
+    setFormData((prev) => ({ ...prev, phone: formatPhone(digits) }));
+  };
+
+  const handlePhoneKeyDown = (e) => {
+    if (e.key === "Backspace") {
+      e.preventDefault();
+      const digits = formData.phone.replace(/\D/g, "");
+      setFormData((prev) => ({ ...prev, phone: formatPhone(digits.slice(0, -1)) }));
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -73,6 +86,17 @@ export default function RequestModal({ isOpen, onClose, serviceName }) {
 
   if (!isOpen) return null;
 
+  function formatPhone(digits) {
+    if (!digits.length) return "";
+    const d = digits[0] === "8" ? "7" + digits.slice(1) : digits;
+    let m = "+7";
+    if (d.length > 1) m += " (" + d.slice(1, 4);
+    if (d.length >= 4) m += ") " + d.slice(4, 7);
+    if (d.length >= 7) m += "-" + d.slice(7, 9);
+    if (d.length >= 9) m += "-" + d.slice(9, 11);
+    return m;
+  }
+
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
@@ -109,7 +133,8 @@ export default function RequestModal({ isOpen, onClose, serviceName }) {
               id="phone"
               name="phone"
               value={formData.phone}
-              onChange={handleChange}
+              onChange={handlePhoneChange}
+              onKeyDown={handlePhoneKeyDown}
               className={styles.input}
               placeholder="+7 (999) 123-45-67"
               required

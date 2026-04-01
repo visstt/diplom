@@ -26,6 +26,7 @@ import { CreateProductDto } from "./dto/create-product.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
 import { Product } from "./entities/product.entity";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
+import { NonAdminGuard } from "../auth/guards/non-admin.guard";
 import { RolesGuard } from "../auth/roles.guard";
 import { Roles } from "../auth/roles.decorator";
 
@@ -163,7 +164,7 @@ export class ProductsController {
   }
 
   @Post("checkout")
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, NonAdminGuard)
   @ApiOperation({ summary: "Записать покупки из корзины при оформлении заказа" })
   @ApiResponse({
     status: HttpStatus.OK,

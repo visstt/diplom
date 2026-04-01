@@ -7,6 +7,7 @@ import { useServices } from "../../hooks/useServices";
 import { useAuth } from "../../contexts/AuthContext";
 import { getCookie } from "../../utils/cookies";
 import AnalyticsTab from "./components/AnalyticsTab";
+import UsersTab from "./components/UsersTab";
 import toast from "react-hot-toast";
 import styles from "./AdminPage.module.css";
 
@@ -234,238 +235,248 @@ export default function AdminPage() {
   };
 
   return (
-    <div className={styles.container}>
-      <Header />
-      <main className={styles.main}>
-        <div className={styles.content}>
-          <h1>Админ-панель</h1>
+    <div className={styles.page}>
+      <div className={styles.headerBg}>
+        <Header />
+      </div>
+      <div className={styles.container}>
+        <div className={styles.breadcrumbs}>
+          <a href="/profile">Профиль</a>
+          <span>/</span>
+          <span className={styles.active}>Админ-панель</span>
+        </div>
 
-          <div className={styles.tabs}>
-            <button
-              className={activeTab === "products" ? styles.activeTab : ""}
-              onClick={() => setActiveTab("products")}
-            >
-              Товары
-            </button>
-            <button
-              className={activeTab === "services" ? styles.activeTab : ""}
-              onClick={() => setActiveTab("services")}
-            >
-              Услуги
-            </button>
-            <button
-              className={activeTab === "analytics" ? styles.activeTab : ""}
-              onClick={() => setActiveTab("analytics")}
-            >
-              📊 Аналитика
-            </button>
-          </div>
+        <h1 className={styles.pageTitle}>Админ-панель</h1>
 
-          {activeTab === "analytics" ? (
-            <AnalyticsTab />
-          ) : (
-          <>
+        <div className={styles.tabs}>
           <button
-            className={styles.createBtn}
-            onClick={() =>
-              handleCreate(activeTab === "products" ? "product" : "service")
-            }
+            className={`${styles.tab} ${activeTab === "products" ? styles.tabActive : ""}`}
+            onClick={() => setActiveTab("products")}
           >
-            + Создать {activeTab === "products" ? "товар" : "услугу"}
+            Товары
           </button>
+          <button
+            className={`${styles.tab} ${activeTab === "services" ? styles.tabActive : ""}`}
+            onClick={() => setActiveTab("services")}
+          >
+            Услуги
+          </button>
+          <button
+            className={`${styles.tab} ${activeTab === "users" ? styles.tabActive : ""}`}
+            onClick={() => setActiveTab("users")}
+          >
+            Пользователи
+          </button>
+          <button
+            className={`${styles.tab} ${activeTab === "analytics" ? styles.tabActive : ""}`}
+            onClick={() => setActiveTab("analytics")}
+          >
+            Аналитика
+          </button>
+        </div>
 
-          {activeTab === "products" ? (
+        {activeTab === "analytics" ? (
+          <AnalyticsTab />
+        ) : activeTab === "users" ? (
+          <UsersTab />
+        ) : (
+          <>
+            <button
+              className={styles.createBtn}
+              onClick={() =>
+                handleCreate(activeTab === "products" ? "product" : "service")
+              }
+            >
+              + Создать {activeTab === "products" ? "товар" : "услугу"}
+            </button>
+
             <div className={styles.list}>
-              {products.map((product) => (
-                <div key={product.id} className={styles.item}>
-                  <div className={styles.itemWithImage}>
-                    {product.image && (
-                      <div className={styles.itemImagePreview}>
-                        <img src={product.image} alt={product.name} />
+              {(activeTab === "products" ? products : services).map((item) => (
+                <div key={item.id} className={styles.card}>
+                  <div className={styles.itemRow}>
+                    {activeTab === "products" && item.image && (
+                      <div className={styles.itemThumb}>
+                        <img src={item.image} alt={item.name} />
                       </div>
                     )}
                     <div className={styles.itemInfo}>
-                      <h3>{product.name}</h3>
-                      <p>{product.price} ₽</p>
-                      <p>{product.category}</p>
-                    </div>
-                  </div>
-                  <div className={styles.itemActions}>
-                    <button onClick={() => handleEdit(product, "product")}>
-                      Редактировать
-                    </button>
-                    <button onClick={() => handleDelete(product.id, "product")}>
-                      Удалить
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className={styles.list}>
-              {services.map((service) => (
-                <div key={service.id} className={styles.item}>
-                  <div className={styles.itemInfo}>
-                    <h3>{service.name}</h3>
-                    <p>{service.price} ₽</p>
-                  </div>
-                  <div className={styles.itemActions}>
-                    <button onClick={() => handleEdit(service, "service")}>
-                      Редактировать
-                    </button>
-                    <button onClick={() => handleDelete(service.id, "service")}>
-                      Удалить
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {editingItem && (
-            <div className={styles.modal}>
-              <div className={styles.modalContent}>
-                <h2>{isCreating ? "Создание" : "Редактирование"}</h2>
-                
-                <div className={styles.formGroup}>
-                  <label className={styles.requiredLabel}>Название *</label>
-                  <input
-                    type="text"
-                    placeholder="Введите название"
-                    value={editingItem.name}
-                    onChange={(e) =>
-                      setEditingItem({ ...editingItem, name: e.target.value })
-                    }
-                    required
-                  />
-                </div>
-                
-                <div className={styles.formGroup}>
-                  <label className={styles.requiredLabel}>Цена (₽) *</label>
-                  <input
-                    type="number"
-                    placeholder="Введите цену"
-                    value={editingItem.price}
-                    onChange={(e) =>
-                      setEditingItem({
-                        ...editingItem,
-                        price: parseFloat(e.target.value),
-                      })
-                    }
-                    min="0.01"
-                    step="0.01"
-                    required
-                  />
-                </div>
-                
-                <div className={styles.formGroup}>
-                  <label>Описание</label>
-                  <textarea
-                    placeholder="Описание (необязательно)"
-                    value={editingItem.description || ""}
-                    onChange={(e) =>
-                      setEditingItem({
-                        ...editingItem,
-                        description: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-                {editingItem.type === "product" && (
-                  <>
-                    <div className={styles.formGroup}>
-                      <label className={styles.requiredLabel}>Категория *</label>
-                      <input
-                        type="text"
-                        placeholder="Введите категорию"
-                        value={editingItem.category || ""}
-                        onChange={(e) =>
-                          setEditingItem({
-                            ...editingItem,
-                            category: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </div>
-                    <div className={styles.imageUpload}>
-                      <label className={styles.requiredLabel}>Изображение товара *:</label>
-                      
-                      {(previewUrl || editingItem.image) ? (
-                        <div className={styles.imagePreview}>
-                          <img 
-                            src={previewUrl || editingItem.image} 
-                            alt="Preview" 
-                            className={styles.previewImage}
-                          />
-                          <div className={styles.imageActions}>
-                            <label htmlFor="file-input" className={styles.changeImageBtn}>
-                              Изменить изображение
-                            </label>
-                            <button 
-                              type="button"
-                              onClick={() => {
-                                setSelectedFile(null);
-                                setPreviewUrl("");
-                                setEditingItem({ ...editingItem, image: "" });
-                              }}
-                              className={styles.removeImageBtn}
-                            >
-                              Удалить
-                            </button>
-                          </div>
-                        </div>
-                      ) : (
-                        <div 
-                          className={styles.uploadArea}
-                          onDragOver={handleDragOver}
-                          onDrop={handleDrop}
-                        >
-                          <label htmlFor="file-input" className={styles.uploadLabel}>
-                            <div className={styles.uploadContent}>
-                              <span className={styles.uploadIcon}>📁</span>
-                              <span>Нажмите для выбора изображения</span>
-                              <span className={styles.uploadHint}>или перетащите файл сюда</span>
-                              <span className={styles.uploadInfo}>JPG, PNG, GIF до 5MB</span>
-                            </div>
-                          </label>
-                        </div>
+                      <h3 className={styles.itemName}>{item.name}</h3>
+                      <span className={styles.itemPrice}>{item.price} ₽</span>
+                      {item.category && (
+                        <span className={styles.itemCategory}>{item.category}</span>
                       )}
-                      
-                      <input
-                        id="file-input"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                        className={styles.fileInput}
-                        style={{ display: 'none' }}
-                      />
                     </div>
-                  </>
-                )}
-                <div className={styles.modalActions}>
-                  <button onClick={handleSave} disabled={isUploading}>
-                    {isUploading ? "Загрузка..." : "Сохранить"}
-                  </button>
-                  <button
-                    onClick={() => {
-                      setEditingItem(null);
-                      setIsCreating(false);
-                      setSelectedFile(null);
-                      setPreviewUrl("");
-                    }}
-                    disabled={isUploading}
-                  >
-                    Отмена
-                  </button>
+                    <div className={styles.itemActions}>
+                      <button
+                        className={styles.editBtn}
+                        onClick={() =>
+                          handleEdit(item, activeTab === "products" ? "product" : "service")
+                        }
+                      >
+                        Редактировать
+                      </button>
+                      <button
+                        className={styles.deleteBtn}
+                        onClick={() =>
+                          handleDelete(item.id, activeTab === "products" ? "product" : "service")
+                        }
+                      >
+                        Удалить
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {editingItem && (
+              <div className={styles.overlay} onClick={() => { setEditingItem(null); setIsCreating(false); setSelectedFile(null); setPreviewUrl(""); }}>
+                <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                  <h2 className={styles.modalTitle}>
+                    {isCreating ? "Создание" : "Редактирование"}
+                  </h2>
+
+                  <div className={styles.formGroup}>
+                    <label>Название *</label>
+                    <input
+                      type="text"
+                      placeholder="Введите название"
+                      value={editingItem.name}
+                      onChange={(e) =>
+                        setEditingItem({ ...editingItem, name: e.target.value })
+                      }
+                    />
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <label>Цена (₽) *</label>
+                    <input
+                      type="number"
+                      placeholder="Введите цену"
+                      value={editingItem.price}
+                      onChange={(e) =>
+                        setEditingItem({
+                          ...editingItem,
+                          price: parseFloat(e.target.value),
+                        })
+                      }
+                      min="0.01"
+                      step="0.01"
+                    />
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <label>Описание</label>
+                    <textarea
+                      placeholder="Описание (необязательно)"
+                      value={editingItem.description || ""}
+                      onChange={(e) =>
+                        setEditingItem({
+                          ...editingItem,
+                          description: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+
+                  {editingItem.type === "product" && (
+                    <>
+                      <div className={styles.formGroup}>
+                        <label>Категория *</label>
+                        <input
+                          type="text"
+                          placeholder="Введите категорию"
+                          value={editingItem.category || ""}
+                          onChange={(e) =>
+                            setEditingItem({
+                              ...editingItem,
+                              category: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+
+                      <div className={styles.formGroup}>
+                        <label>Изображение товара *</label>
+                        {(previewUrl || editingItem.image) ? (
+                          <div className={styles.imagePreview}>
+                            <img
+                              src={previewUrl || editingItem.image}
+                              alt="Preview"
+                              className={styles.previewImage}
+                            />
+                            <div className={styles.imageActions}>
+                              <label htmlFor="file-input" className={styles.changeImageBtn}>
+                                Изменить
+                              </label>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedFile(null);
+                                  setPreviewUrl("");
+                                  setEditingItem({ ...editingItem, image: "" });
+                                }}
+                                className={styles.removeImageBtn}
+                              >
+                                Удалить
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div
+                            className={styles.uploadArea}
+                            onDragOver={handleDragOver}
+                            onDrop={handleDrop}
+                          >
+                            <label htmlFor="file-input" className={styles.uploadLabel}>
+                              <div className={styles.uploadContent}>
+                                <span className={styles.uploadIcon}>📁</span>
+                                <span>Нажмите или перетащите изображение</span>
+                                <span className={styles.uploadHint}>
+                                  JPG, PNG, GIF до 5MB
+                                </span>
+                              </div>
+                            </label>
+                          </div>
+                        )}
+                        <input
+                          id="file-input"
+                          type="file"
+                          accept="image/*"
+                          onChange={handleFileChange}
+                          style={{ display: "none" }}
+                        />
+                      </div>
+                    </>
+                  )}
+
+                  <div className={styles.modalActions}>
+                    <button
+                      className={styles.saveBtn}
+                      onClick={handleSave}
+                      disabled={isUploading}
+                    >
+                      {isUploading ? "Загрузка..." : "Сохранить"}
+                    </button>
+                    <button
+                      className={styles.cancelBtn}
+                      onClick={() => {
+                        setEditingItem(null);
+                        setIsCreating(false);
+                        setSelectedFile(null);
+                        setPreviewUrl("");
+                      }}
+                      disabled={isUploading}
+                    >
+                      Отмена
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
           </>
-          )}
-        </div>
-      </main>
+        )}
+      </div>
       <Footer />
     </div>
   );

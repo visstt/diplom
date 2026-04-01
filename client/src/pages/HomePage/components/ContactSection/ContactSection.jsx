@@ -1,10 +1,6 @@
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
 import styles from "./ContactSection.module.css";
 
 export default function ContactSection() {
-  const position = [51.7667, 55.0986]; // Координаты Оренбурга, ул. Берёзка, 2/5
-
   return (
     <div className={styles.contactSection}>
       <div className="container">
@@ -22,24 +18,14 @@ export default function ContactSection() {
             </div>
           </div>
           <div className={styles.mapContainer}>
-            <MapContainer
-              center={position}
-              zoom={15}
-              scrollWheelZoom={true}
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2465.9901282875585!2d55.123374999999996!3d51.8246108!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x417bf690e23293eb%3A0x87d6d01fd726dd82!2z0YPQuy4g0JHQtdGA0LXQt9C60LAsIDIvNSwg0J7RgNC10L3QsdGD0YDQsywg0J7RgNC10L3QsdGD0YDQs9GB0LrQsNGPINC-0LHQuy4sIDQ2MDA0NA!5e0!3m2!1sru!2sru!4v1775022946332!5m2!1sru!2sru"
               className={styles.map}
-            >
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-              />
-              <Marker position={position}>
-                <Popup>
-                  ООО «ТИТАН»
-                  <br />
-                  г. Оренбург, ул. Берёзка, 2/5
-                </Popup>
-              </Marker>
-            </MapContainer>
+              style={{ border: 0 }}
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
           </div>
         </div>
       </div>

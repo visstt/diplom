@@ -1,8 +1,12 @@
+import { useState } from "react";
 import Header from "../../../../components/Header/Header";
 import Button from "../../../../components/Button/Button";
+import RequestModal from "../../../../components/RequestModal/RequestModal";
 import styles from "./HeroSection.module.css";
 
 export default function HeroSection() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.headerWrapper}>
@@ -19,11 +23,17 @@ export default function HeroSection() {
               Наш эксперт проконсультирует Вас в течение 15 мин в рабочее время.
             </p>
             <div className={styles.buttonWrapper}>
-              <Button>Оставить заявку</Button>
+              <Button onClick={() => setIsModalOpen(true)}>Оставить заявку</Button>
             </div>
           </div>
         </div>
       </div>
+
+      <RequestModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        serviceName="Оставить заявку"
+      />
     </div>
   );
 }

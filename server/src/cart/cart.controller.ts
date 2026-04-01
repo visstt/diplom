@@ -22,11 +22,12 @@ import { CartService } from "./cart.service";
 import { AddToCartDto } from "./dto/add-to-cart.dto";
 import { UpdateQuantityDto } from "./dto/update-quantity.dto";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
+import { NonAdminGuard } from "../auth/guards/non-admin.guard";
 
 @ApiTags("cart")
 @ApiBearerAuth("access-token")
 @Controller("cart")
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, NonAdminGuard)
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 

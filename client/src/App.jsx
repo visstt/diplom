@@ -11,6 +11,7 @@ import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import CheckoutPage from "./pages/CheckoutPage/CheckoutPage";
 import AdminPage from "./pages/AdminPage/AdminPage";
 import ChatPage from "./pages/ChatPage/ChatPage";
+import PrivacyPage from "./pages/PrivacyPage/PrivacyPage";
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contacts" element={<ContactsPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
           <Route
             path="/profile"
             element={

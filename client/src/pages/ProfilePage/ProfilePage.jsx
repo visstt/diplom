@@ -54,6 +54,32 @@ export default function ProfilePage() {
     setError("");
   };
 
+  const handlePhoneChange = (e) => {
+    const digits = e.target.value.replace(/\D/g, "").slice(0, 11);
+    setFormData((prev) => ({ ...prev, phone: formatPhone(digits) }));
+    setMessage("");
+    setError("");
+  };
+
+  const handlePhoneKeyDown = (e) => {
+    if (e.key === "Backspace") {
+      e.preventDefault();
+      const digits = formData.phone.replace(/\D/g, "");
+      setFormData((prev) => ({ ...prev, phone: formatPhone(digits.slice(0, -1)) }));
+    }
+  };
+
+  function formatPhone(digits) {
+    if (!digits.length) return "";
+    const d = digits[0] === "8" ? "7" + digits.slice(1) : digits;
+    let m = "+7";
+    if (d.length > 1) m += " (" + d.slice(1, 4);
+    if (d.length >= 4) m += ") " + d.slice(4, 7);
+    if (d.length >= 7) m += "-" + d.slice(7, 9);
+    if (d.length >= 9) m += "-" + d.slice(9, 11);
+    return m;
+  }
+
   const handlePasswordChange = (e) => {
     setPasswordData({ ...passwordData, [e.target.name]: e.target.value });
     setMessage("");
@@ -110,17 +136,21 @@ export default function ProfilePage() {
 
   return (
     <div className={styles.profilePage}>
-      <Header />
+      <div className={styles.headerBg}>
+        <Header />
+      </div>
       <div className={styles.profileContainer}>
-        <div className={styles.profileHeader}>
-          <div className={styles.avatarSection}>
-            <div className={styles.avatarCircle}>
-              {formData.firstName?.charAt(0).toUpperCase()}
+        <div className={styles.topRow}>
+          <div className={styles.profileCard}>
+            <div className={styles.profileHeader}>
+              <div className={styles.avatarCircle}>
+                {formData.firstName?.charAt(0).toUpperCase()}
+              </div>
+              <div className={styles.userInfo}>
+                <h1>{formData.firstName || "Пользователь"}</h1>
+                <p>{user?.email}</p>
+              </div>
             </div>
-          </div>
-          <div className={styles.userInfo}>
-            <h1>{formData.firstName || "Пользователь"}</h1>
-            <p>{user?.email}</p>
             <div className={styles.actionButtons}>
               {user?.role === "admin" && (
                 <button
@@ -136,6 +166,28 @@ export default function ProfilePage() {
               >
                 💬 Чат с поддержкой
               </button>
+              <button
+                type="button"
+                className={styles.logoutButton}
+                onClick={handleLogout}
+              >
+                Выйти
+              </button>
+            </div>
+          </div>
+
+          <div className={styles.profileCard}>
+            <div className={styles.infoGrid}>
+              <div className={styles.infoItem}>
+                <label>Дата регистрации</label>
+                <p>
+                  {new Date(user?.createdAt).toLocaleDateString("ru-RU", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -175,9 +227,10 @@ export default function ProfilePage() {
                 <input
                   type="tel"
                   name="phone"
-                  placeholder="+7 (___) ___-__-__"
+                  placeholder="+7 (999) 123-45-67"
                   value={formData.phone}
-                  onChange={handleChange}
+                  onChange={handlePhoneChange}
+                  onKeyDown={handlePhoneKeyDown}
                 />
               </div>
 
@@ -192,92 +245,40 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            <div className={styles.infoSection}>
-              <div className={styles.infoGrid}>
-                <div className={styles.infoItem}>
-                  <label>Дата регистрации</label>
-                  <p>
-                    {new Date(user?.createdAt).toLocaleDateString("ru-RU", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}
-                  </p>
-                </div>
+            <h2 className={styles.sectionTitle}>Безопасность</h2>
+            <div className={styles.formGrid}>
+              <div className={styles.formGroup}>
+                <label>Новый пароль</label>
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Минимум 6 символов"
+                  value={passwordData.password}
+                  onChange={handlePasswordChange}
+                  autoComplete="new-password"
+                />
+              </div>
 
-                <div className={styles.languageSection}>
-                  <label>Язык интерфейса</label>
-                  <div className={styles.radioGroup}>
-                    <label className={styles.radioLabel}>
-                      <input
-                        type="radio"
-                        name="language"
-                        value="ru"
-                        checked={formData.language === "ru"}
-                        onChange={handleChange}
-                      />
-                      Русский
-                    </label>
-                    <label className={styles.radioLabel}>
-                      <input
-                        type="radio"
-                        name="language"
-                        value="en"
-                        checked={formData.language === "en"}
-                        onChange={handleChange}
-                      />
-                      Английский
-                    </label>
-                  </div>
-                </div>
+              <div className={styles.formGroup}>
+                <label>Подтверждение пароля</label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  placeholder="Повторите пароль"
+                  value={passwordData.confirmPassword}
+                  onChange={handlePasswordChange}
+                  autoComplete="new-password"
+                />
               </div>
             </div>
 
-            <div className={styles.passwordSection}>
-              <h2 className={styles.sectionTitle}>Безопасность</h2>
-              <div className={styles.formGrid}>
-                <div className={styles.formGroup}>
-                  <label>Новый пароль</label>
-                  <input
-                    type="password"
-                    name="password"
-                    placeholder="Минимум 6 символов"
-                    value={passwordData.password}
-                    onChange={handlePasswordChange}
-                    autoComplete="new-password"
-                  />
-                </div>
-
-                <div className={styles.formGroup}>
-                  <label>Подтверждение пароля</label>
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    placeholder="Повторите пароль"
-                    value={passwordData.confirmPassword}
-                    onChange={handlePasswordChange}
-                    autoComplete="new-password"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className={styles.buttonGroup}>
-              <button
-                type="submit"
-                className={styles.saveButton}
-                disabled={saving}
-              >
-                {saving ? "Сохранение..." : "Сохранить изменения"}
-              </button>
-              <button
-                type="button"
-                className={styles.logoutButton}
-                onClick={handleLogout}
-              >
-                Выйти из аккаунта
-              </button>
-            </div>
+            <button
+              type="submit"
+              className={styles.saveButton}
+              disabled={saving}
+            >
+              {saving ? "Сохранение..." : "Сохранить изменения"}
+            </button>
           </form>
         </div>
       </div>

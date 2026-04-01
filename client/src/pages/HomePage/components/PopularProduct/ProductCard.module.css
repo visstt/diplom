@@ -6,8 +6,8 @@
   cursor: pointer;
   transition: transform 0.2s;
   img {
-    width: 361px;
-    height: 361px;
+    width: 280px;
+    height: 280px;
   }
   p {
     padding-left: 30px;
@@ -32,8 +32,8 @@
 /* Планшеты */
 @media (max-width: 1024px) {
   .card img {
-    width: 320px;
-    height: 320px;
+    width: 250px;
+    height: 250px;
   }
 }
 
@@ -43,8 +43,8 @@
     margin-bottom: 30px;
   }
   .card img {
-    width: 280px;
-    height: 280px;
+    width: 220px;
+    height: 220px;
   }
   .card p {
     padding-left: 20px;

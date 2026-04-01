@@ -1,7 +1,12 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import Button from "../Button/Button";
+import FeedbackModal from "../FeedbackModal/FeedbackModal";
 import styles from "./Footer.module.css";
 
 export default function Footer() {
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+
   return (
     <footer className={styles.footer}>
       <div className="container">
@@ -29,18 +34,20 @@ export default function Footer() {
               Свяжитесь с нами удобным для вас способом,
               <br />и мы постараемся ответить как можно скорее.
             </p>
-            <form className={styles.form}>
-              <Button type="submit">Написать</Button>
-            </form>
+            <div className={styles.form}>
+              <Button type="button" onClick={() => setIsFeedbackOpen(true)}>
+                Написать
+              </Button>
+            </div>
           </div>
           <div className={styles.divider}></div>
 
           <div className={styles.navSection}>
-            <a href="/">Каталог</a>
-            <a href="/">Услуги</a>
-            <a href="/">О нас</a>
-            <a href="/">Контакты</a>
-            <a href="/">Политика конфиденциальности</a>
+            <Link to="/catalog">Каталог</Link>
+            <Link to="/services">Услуги</Link>
+            <Link to="/about">О нас</Link>
+            <Link to="/contacts">Контакты</Link>
+            <Link to="/privacy">Политика конфиденциальности</Link>
           </div>
         </div>
 
@@ -48,6 +55,11 @@ export default function Footer() {
           © ООО «Титан» ОГРН 1165835070983 ИНН 5836679828
         </div>
       </div>
+
+      <FeedbackModal
+        isOpen={isFeedbackOpen}
+        onClose={() => setIsFeedbackOpen(false)}
+      />
     </footer>
   );
 }

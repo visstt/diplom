@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import styles from "./RegisterModal.module.css";
 
 export default function RegisterModal({
@@ -55,6 +56,7 @@ export default function RegisterModal({
     try {
       const { privacy: _privacy, ...userData } = formData;
       await onRegister(userData);
+      toast.success("Успешная регистрация!");
       onClose();
     } catch (err) {
       setError(

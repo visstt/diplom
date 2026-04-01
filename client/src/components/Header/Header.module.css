@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 0px;
+  padding: 28px 0px;
 }
 .logo_section {
   display: flex;
@@ -36,7 +36,7 @@
 
   a {
     font-family: var(--font-body);
-    font-size: 16px;
+    font-size: 20px;
     color: var(--color-white);
     text-decoration: none;
   }

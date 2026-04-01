@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import styles from "./AuthModal.module.css";
 
 export default function AuthModal({
@@ -39,6 +40,7 @@ export default function AuthModal({
 
     try {
       await onLogin(formData);
+      toast.success("Успешная авторизация!");
       onClose();
     } catch (err) {
       setError(
