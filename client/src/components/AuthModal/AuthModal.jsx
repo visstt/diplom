@@ -44,7 +44,7 @@ export default function AuthModal({
       onClose();
     } catch (err) {
       setError(
-        err.response?.data?.message || "Ошибка входа. Проверьте данные."
+        err.response?.data?.message || "Ошибка входа. Проверьте данные.",
       );
     } finally {
       setLoading(false);
@@ -106,10 +106,6 @@ export default function AuthModal({
               Зарегистрироваться
             </button>
           </div>
-        </div>
-
-        <div className={styles.rightSection}>
-          <img src="/img/picture_auth.png" alt="Login" />
         </div>
       </div>
     </div>

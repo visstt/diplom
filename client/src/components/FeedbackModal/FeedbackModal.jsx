@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 import Button from "../Button/Button";
 import styles from "./FeedbackModal.module.css";
 
@@ -19,7 +21,10 @@ export default function FeedbackModal({ isOpen, onClose }) {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setForm((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   const handlePhoneChange = (e) => {
@@ -37,17 +42,23 @@ export default function FeedbackModal({ isOpen, onClose }) {
 
   function formatPhone(digits) {
     if (!digits.length) return "";
-    const d = digits[0] === "8" ? "7" + digits.slice(1) : digits;
+    const d = digits[0] === "8" ? `7${digits.slice(1)}` : digits;
     let m = "+7";
-    if (d.length > 1) m += " (" + d.slice(1, 4);
-    if (d.length >= 4) m += ") " + d.slice(4, 7);
-    if (d.length >= 7) m += "-" + d.slice(7, 9);
-    if (d.length >= 9) m += "-" + d.slice(9, 11);
+    if (d.length > 1) m += ` (${d.slice(1, 4)}`;
+    if (d.length >= 4) m += `) ${d.slice(4, 7)}`;
+    if (d.length >= 7) m += `-${d.slice(7, 9)}`;
+    if (d.length >= 9) m += `-${d.slice(9, 11)}`;
     return m;
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!form.agree) {
+      toast.error("Необходимо согласие на обработку персональных данных");
+      return;
+    }
+
     setIsSubmitting(true);
     setStatus(null);
 
@@ -107,6 +118,7 @@ export default function FeedbackModal({ isOpen, onClose }) {
               placeholder="Имя"
               value={form.name}
               onChange={handleChange}
+              required
             />
           </div>
 
@@ -126,6 +138,7 @@ export default function FeedbackModal({ isOpen, onClose }) {
             value={form.phone}
             onChange={handlePhoneChange}
             onKeyDown={handlePhoneKeyDown}
+            required
           />
 
           <div className={styles.checkboxWrapper}>
@@ -138,8 +151,8 @@ export default function FeedbackModal({ isOpen, onClose }) {
               onChange={handleChange}
             />
             <label htmlFor="fb-agreement" className={styles.checkboxLabel}>
-              Я даю согласие на обработку моих персональных данных и соглашаюсь с
-              Политикой конфиденциальности
+              Я даю согласие на обработку моих персональных данных и соглашаюсь с{" "}
+              <Link to="/privacy">Политикой конфиденциальности</Link>
             </label>
           </div>
 

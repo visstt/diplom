@@ -54,14 +54,6 @@
   transform: translateX(-3px);
 }
 
-.chatContainer h1 {
-  padding: 25px 30px;
-  margin: 0;
-  background: linear-gradient(135deg, #484283 0%, #362f65 100%);
-  color: white;
-  font-size: 24px;
-}
-
 .loading {
   text-align: center;
   padding: 60px 20px;
@@ -69,7 +61,6 @@
   color: #666;
 }
 
-/* Админ интерфейс */
 .adminLayout {
   display: grid;
   grid-template-columns: 350px 1fr;
@@ -143,6 +134,39 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-width: 0;
+}
+
+.mobileChatPicker {
+  display: none;
+  position: relative;
+  padding: 12px 16px 0;
+  background: #fafbff;
+}
+
+.mobileChatPickerButton,
+.mobileChatItem {
+  width: 100%;
+  border: 1px solid #d9d7ef;
+  background: white;
+  border-radius: 10px;
+  padding: 12px 14px;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+
+.mobileChatList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.mobileChatItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .selectChatPrompt {
@@ -152,9 +176,10 @@
   justify-content: center;
   color: #999;
   font-size: 16px;
+  padding: 24px;
+  text-align: center;
 }
 
-/* Пользовательский интерфейс */
 .userChat {
   display: flex;
   flex-direction: column;
@@ -246,6 +271,7 @@
 
 .messageInput {
   flex: 1;
+  min-width: 0;
   padding: 12px 16px;
   border: 2px solid #e8e6f5;
   border-radius: 8px;
@@ -282,14 +308,42 @@
   transform: translateY(0);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
+  .main {
+    padding: 20px 12px;
+  }
+
+  .chatHeaderBar {
+    padding: 16px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .chatHeaderBar h1 {
+    font-size: 20px;
+  }
+
+  .backButton {
+    width: 100%;
+  }
+
   .adminLayout {
     grid-template-columns: 1fr;
+    height: auto;
+    min-height: 70vh;
   }
 
   .chatsList {
     display: none;
+  }
+
+  .mobileChatPicker {
+    display: block;
+  }
+
+  .userChat,
+  .messagesArea {
+    min-height: 70vh;
   }
 
   .message {
@@ -297,10 +351,23 @@
   }
 
   .inputForm {
-    padding: 15px 20px;
+    padding: 15px 16px;
+    flex-wrap: wrap;
+  }
+
+  .messageInput {
+    width: 100%;
+  }
+
+  .sendButton {
+    width: 100%;
   }
 
   .messagesContainer {
-    padding: 15px 20px;
+    padding: 15px 16px;
+  }
+
+  .chatHeader {
+    padding: 16px;
   }
 }

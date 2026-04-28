@@ -23,6 +23,15 @@ export default function AdminPage() {
   const [previewUrl, setPreviewUrl] = useState("");
   const [isUploading, setIsUploading] = useState(false);
 
+  const parseMultilineList = (value) =>
+    value
+      .split("\n")
+      .map((item) => item.trim())
+      .filter(Boolean);
+
+  const formatMultilineList = (items) =>
+    Array.isArray(items) ? items.join("\n") : "";
+
   useEffect(() => {
     // Проверка роли пользователя
     if (!user || user.role !== "admin") {
@@ -57,7 +66,12 @@ export default function AdminPage() {
   };
 
   const handleEdit = (item, type) => {
-    setEditingItem({ ...item, type });
+    setEditingItem({
+      ...item,
+      type,
+      benefits: Array.isArray(item.benefits) ? item.benefits : [],
+      features: Array.isArray(item.features) ? item.features : [],
+    });
     setIsCreating(false);
     setSelectedFile(null);
     setPreviewUrl("");
@@ -70,6 +84,8 @@ export default function AdminPage() {
       price: 0, 
       description: "", 
       category: "",
+      benefits: [],
+      features: [],
       image: type === "product" ? "" : undefined
     });
     setIsCreating(true);
@@ -206,6 +222,14 @@ export default function AdminPage() {
       const dataToSend = {
         ...itemData,
         price: Number(itemData.price) || 0,
+        benefits:
+          editingItem.type === "product"
+            ? parseMultilineList(formatMultilineList(itemData.benefits))
+            : undefined,
+        features:
+          editingItem.type === "product"
+            ? parseMultilineList(formatMultilineList(itemData.features))
+            : undefined,
         ...(editingItem.type === "product" && { image: imageUrl }),
       };
 
@@ -391,6 +415,34 @@ export default function AdminPage() {
                             setEditingItem({
                               ...editingItem,
                               category: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+
+                      <div className={styles.formGroup}>
+                        <label>Преимущества</label>
+                        <textarea
+                          placeholder="Каждое преимущество с новой строки"
+                          value={formatMultilineList(editingItem.benefits)}
+                          onChange={(e) =>
+                            setEditingItem({
+                              ...editingItem,
+                              benefits: parseMultilineList(e.target.value),
+                            })
+                          }
+                        />
+                      </div>
+
+                      <div className={styles.formGroup}>
+                        <label>Функциональные возможности</label>
+                        <textarea
+                          placeholder="Каждую возможность с новой строки"
+                          value={formatMultilineList(editingItem.features)}
+                          onChange={(e) =>
+                            setEditingItem({
+                              ...editingItem,
+                              features: parseMultilineList(e.target.value),
                             })
                           }
                         />

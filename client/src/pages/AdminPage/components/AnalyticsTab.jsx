@@ -210,7 +210,7 @@ export default function AnalyticsTab() {
                     label={({ name, percent }) =>
                       `${name.substring(0, 15)}${name.length > 15 ? "..." : ""} (${(percent * 100).toFixed(0)}%)`
                     }
-                    outerRadius={120}
+                    outerRadius={92}
                     fill="#8884d8"
                     dataKey="value"
                   >
@@ -296,14 +296,14 @@ export default function AnalyticsTab() {
                     Покупки: p.purchaseCount,
                   }))}
                 layout="vertical"
-                margin={{ left: 150 }}
+                margin={{ left: 40, right: 12, top: 8, bottom: 8 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis type="number" />
                 <YAxis
                   dataKey="name"
                   type="category"
-                  width={140}
+                  width={110}
                   fontSize={12}
                 />
                 <Tooltip />

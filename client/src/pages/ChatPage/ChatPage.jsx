@@ -22,9 +22,9 @@ export default function ChatPage() {
   const [chatPartner, setChatPartner] = useState(null);
   const [chats, setChats] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
+  const [isChatPickerOpen, setIsChatPickerOpen] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Загрузить чаты
   useEffect(() => {
     const loadChats = async () => {
       try {
@@ -51,10 +51,14 @@ export default function ChatPage() {
     loadChats();
   }, [user]);
 
-  // Загрузить переписку с конкретным пользователем (для админа)
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   const loadConversation = async (userId) => {
     try {
       setSelectedUserId(userId);
+      setIsChatPickerOpen(false);
       const data = await getConversation(userId);
       setMessages(data);
       const selectedChat = chats.find((chat) => chat.user.id === userId);
@@ -62,11 +66,10 @@ export default function ChatPage() {
         setChatPartner(selectedChat.user);
       }
       await markAsRead(userId);
-      // Обновляем счетчик непрочитанных
       setChats((prev) =>
         prev.map((chat) =>
-          chat.user.id === userId ? { ...chat, unreadCount: 0 } : chat
-        )
+          chat.user.id === userId ? { ...chat, unreadCount: 0 } : chat,
+        ),
       );
     } catch (error) {
       toast.error("Ошибка при загрузке сообщений");
@@ -74,7 +77,6 @@ export default function ChatPage() {
     }
   };
 
-  // Отправить сообщение
   const handleSend = async (e) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
@@ -96,7 +98,6 @@ export default function ChatPage() {
     }
   };
 
-  // Автообновление (polling)
   useEffect(() => {
     if (!chatPartner && user.role !== "admin") return;
 
@@ -112,7 +113,7 @@ export default function ChatPage() {
       } catch (error) {
         console.error("Ошибка автообновления:", error);
       }
-    }, 3000); // Обновление каждые 3 секунды
+    }, 3000);
 
     return () => clearInterval(interval);
   }, [chatPartner, selectedUserId, user.role]);
@@ -145,7 +146,6 @@ export default function ChatPage() {
           </div>
 
           {user.role === "admin" ? (
-            // Интерфейс для админа
             <div className={styles.adminLayout}>
               <div className={styles.chatsList}>
                 <h2>Чаты пользователей</h2>
@@ -161,9 +161,7 @@ export default function ChatPage() {
                       onClick={() => loadConversation(chat.user.id)}
                     >
                       <div className={styles.chatItemInfo}>
-                        <strong>
-                          {chat.user.firstName || chat.user.email}
-                        </strong>
+                        <strong>{chat.user.firstName || chat.user.email}</strong>
                         <p className={styles.lastMessage}>
                           {chat.lastMessage.content.substring(0, 50)}...
                         </p>
@@ -179,6 +177,38 @@ export default function ChatPage() {
               </div>
 
               <div className={styles.messagesArea}>
+                <div className={styles.mobileChatPicker}>
+                  <button
+                    type="button"
+                    className={styles.mobileChatPickerButton}
+                    onClick={() => setIsChatPickerOpen((prev) => !prev)}
+                  >
+                    {chatPartner
+                      ? `Чат: ${chatPartner.firstName || chatPartner.email}`
+                      : "Выбрать собеседника"}
+                  </button>
+
+                  {isChatPickerOpen && (
+                    <div className={styles.mobileChatList}>
+                      {chats.map((chat) => (
+                        <button
+                          type="button"
+                          key={chat.user.id}
+                          className={styles.mobileChatItem}
+                          onClick={() => loadConversation(chat.user.id)}
+                        >
+                          <span>{chat.user.firstName || chat.user.email}</span>
+                          {chat.unreadCount > 0 && (
+                            <span className={styles.unreadBadge}>
+                              {chat.unreadCount}
+                            </span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
                 {selectedUserId ? (
                   <>
                     <div className={styles.chatHeader}>
@@ -230,7 +260,6 @@ export default function ChatPage() {
               </div>
             </div>
           ) : (
-            // Интерфейс для пользователя
             <div className={styles.userChat}>
               {chatPartner && (
                 <div className={styles.chatHeader}>
