@@ -51,6 +51,14 @@ export default function ServicesContent() {
         <div className={styles.servicesGrid}>
           {services.map((service) => (
             <div key={service.id} className={styles.serviceCard}>
+              <div className={styles.imageWrapper}>
+                <img
+                  src="/img/1papka.png"
+                  alt={service.name}
+                  className={styles.serviceImage}
+                />
+              </div>
+
               <div className={styles.content}>
                 <h2 className={styles.serviceName}>{service.name}</h2>
                 <p className={styles.price}>
